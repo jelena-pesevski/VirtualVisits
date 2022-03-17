@@ -1,0 +1,24 @@
+{
+    "rules": [
+      {
+        "methods": ["GET"],
+        "pattern": "/museums/**",
+        "roles": ["ADMIN", "USER"]
+      },
+      {
+        "methods": ["GET", "POST"],
+        "pattern": "/virtual-visits/**",
+        "roles": ["ADMIN", "USER"]
+      },
+      {
+        "methods": ["POST"],
+        "pattern": "/users/**",
+        "roles": ["ADMIN", "USER"]
+      },
+      {
+        "methods": ["POST"],
+        "pattern": "/ticket",
+        "roles": ["ADMIN", "USER"]
+      }
+    ]
+}
