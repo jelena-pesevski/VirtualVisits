@@ -1,0 +1,11 @@
+.content {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 18px;
+  color: #5f31b0;
+  font-weight: bold;
+  padding: 8px;
+}

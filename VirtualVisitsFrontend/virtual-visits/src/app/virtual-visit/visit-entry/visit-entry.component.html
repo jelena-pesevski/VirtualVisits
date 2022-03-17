@@ -1,0 +1,7 @@
+<form [formGroup]="form" class="ticket-form" fxLayout="column" fxLayoutAlign="center center">
+    <mat-form-field appearance="outline">
+        <mat-label>Ticket number</mat-label>
+        <input matInput type="text" formControlName="ticketNumber" required autocomplete="off">
+    </mat-form-field>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="attend(form)">Attend</button>
+</form>

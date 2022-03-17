@@ -1,0 +1,15 @@
+<div class="navigation" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between"> 
+    <div class="left-nav" fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutGap.xs="10px">
+        <a routerLink="/home" class="link" routerLinkActive="primary">News </a>
+
+        <a routerLink="/home/museums" class="link" routerLinkActive="primary">Museums </a>
+
+        <a routerLink="/home/virtual-visits" class="link" routerLinkActive="primary">Virtual visits </a>
+    </div>
+   
+    <div class="right-nav" fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutGap.xs="10px">
+        <a id="admin-link" *ngIf="isAdmin" href="https://etf.unibl.org/">Admin app</a>
+
+        <a (click)="logout()" class="link" routerLinkActive="primary">Logout </a>  
+    </div>
+</div>

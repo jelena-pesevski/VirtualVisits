@@ -1,0 +1,33 @@
+<div class="content" fxLayout fxLayoutAlign="center center">
+    <form [formGroup]="form" class="buy-ticket-form" fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field appearance="outline">
+            <mat-label>Firstname</mat-label>
+            <input matInput type="text" formControlName="firstname" required autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Lastname</mat-label>
+            <input matInput type="text" formControlName="lastname" required autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Credit card number</mat-label>
+            <input matInput type="text" formControlName="creditCardNumber" required autocomplete="off"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select formControlName="creditCardType" required>
+              <mat-option value="0">VISA</mat-option>
+              <mat-option value="1">MASTERCARD</mat-option>
+              <mat-option value="2">AMERICAN EXPRESS</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Expiration date</mat-label>
+            <input matInput type="text" formControlName="expirationDate" required autocomplete="off" placeholder="ex. 09/24">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Pin</mat-label>
+            <input matInput type="pin" formControlName="pin" required autocomplete="off">
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="buyTicket(form)">Confirm</button>
+    </form>
+</div>

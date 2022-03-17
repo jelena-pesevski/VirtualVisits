@@ -1,0 +1,31 @@
+<div class="registration-container" fxLayout fxLayoutAlign="center center">
+    <form [formGroup]="form" class="registration-form" fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field appearance="outline">
+            <mat-label>Firstname</mat-label>
+            <input matInput type="text" formControlName="firstname" required autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Lastname</mat-label>
+            <input matInput type="text" formControlName="lastname" required autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="text" formControlName="mail" required autocomplete="off" placeholder="xxxx@example.com"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" formControlName="username" required autocomplete="off">
+            <mat-hint>Minimum 12 characters</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Confirm password</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" required autocomplete="off">
+        </mat-form-field>
+        <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="register(form)">Sign up</button>
+    </form>
+    <div *ngIf="error">{{error}}</div>
+</div>

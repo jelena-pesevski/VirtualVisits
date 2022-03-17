@@ -1,0 +1,25 @@
+.content {
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+  padding: 8px;
+  text-align: center;
+}
+
+.upcoming-visits-container {
+  padding: 5px;
+}
+
+table {
+  width: 100%;
+}
+
+.table-title {
+  padding: 10px 10px 5px 10px;
+  font-size: 18px;
+  color: #5f31b0;
+  font-weight: bold;
+}

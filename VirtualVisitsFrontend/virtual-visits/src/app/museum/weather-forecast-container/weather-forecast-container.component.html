@@ -1,0 +1,13 @@
+<div class="content" fxLayout="row" fxLayout.xs="column" fxLayoutGap="5px">
+
+    <mat-card class="weather-card" *ngFor="let city of forecastSource" fxFlexAlign="stretch">
+        <mat-card-title-group>
+          <mat-card-title>{{city.name}}</mat-card-title>
+          <img mat-card-sm-image src="http://openweathermap.org/img/wn/{{city.icon}}@2x.png"/>
+        </mat-card-title-group>
+        <mat-card-content>
+          {{city.temp}}°C
+        </mat-card-content>
+    </mat-card>
+
+</div>

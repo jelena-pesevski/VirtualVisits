@@ -1,0 +1,42 @@
+<div class="content">
+    <div class="search-header">
+      <mat-form-field>
+        <mat-label>Search by name or city</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Nat">
+      </mat-form-field> 
+  </div>
+  <div class="table-container mat-elevation-z8">
+  
+      <table mat-table [dataSource]="dataSource" matSort>
+    
+        <!-- museum_id  -->
+        <ng-container matColumnDef="museumId">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let row"> {{row.museumId}} </td>
+        </ng-container>
+    
+        <!-- name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+    
+        <!-- city -->
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef> City </th>
+          <td mat-cell *matCellDef="let row"> {{row.city}} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="details">
+          <th mat-header-cell  *matHeaderCellDef > </th>
+          <td mat-cell *matCellDef="let row" >
+               <button mat-raised-button color="primary" (click)="details(row)" >See details</button>
+          </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      </table>
+    </div>
+  </div>
