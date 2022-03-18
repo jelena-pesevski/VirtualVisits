@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -166,19 +167,21 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
 
         response.setImagesUrls(imagesUrls);
         response.setVideoUrl(videoUrl);
-
         //adding ending time
+        response.setEndingTimeInMillis(getEndingTime(virtualVisit));
+
+        return response;
+    }
+
+    private long getEndingTime(VirtualVisitEntity virtualVisit){
         LocalDate localDate = virtualVisit.getDate().toLocalDate();
         LocalTime localTime=virtualVisit.getStart().toLocalTime();
         LocalTime durationTime=virtualVisit.getDuration().toLocalTime();
 
-        localTime=localTime.plus(Duration.ofNanos(durationTime.toNanoOfDay()));
-
         LocalDateTime ldt=localDate.atTime(localTime);
         ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+        Instant instant=zdt.toInstant().plus(durationTime.getHour(), ChronoUnit.HOURS).plus(durationTime.getMinute(), ChronoUnit.MINUTES);
 
-        response.setEndingTimeInMillis(zdt.toInstant().toEpochMilli());
-
-        return response;
+        return instant.toEpochMilli();
     }
 }

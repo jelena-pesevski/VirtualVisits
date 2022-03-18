@@ -1,1 +1,11 @@
-<p>rss-feed works!</p>
+<div class="content">
+    <div class="news-box" *ngFor="let item of rssRoot?.items">
+        <img [src]='item.enclosure.link' height="250"/>
+        <h2>{{item.title}}</h2>
+        <h5>{{item.pubDate}}</h5>
+
+        <p>{{item.description}}</p>
+        <a [href]='item.link' target="_blank">Read more</a>
+    </div>
+</div>
+

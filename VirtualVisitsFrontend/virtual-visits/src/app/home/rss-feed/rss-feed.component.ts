@@ -19,7 +19,7 @@ export class RssFeedComponent implements OnInit {
         this.rssRoot=data;
       },
       error:err=>{
-        console.log("error while reading rss");
+        console.log("Error while reading rss");
       }
     })
   }

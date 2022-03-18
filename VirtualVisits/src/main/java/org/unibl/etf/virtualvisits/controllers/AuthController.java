@@ -42,4 +42,7 @@ public class AuthController {
         return authService.refreshToken(refreshTokenRequest);
     }
 
+
+    //TODO
+    //add logout endpoint
 }

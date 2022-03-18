@@ -17,7 +17,7 @@ export class TicketService {
 
   getTicket(obj:any):Observable<any>{
     obj.cashAmount=this.virtualVisit?.price;
-    obj.userId=this.loginService.activeUser?.userId;
+    obj.userId=this.loginService.getUserId();
     obj.virtualVisitId=this.virtualVisit?.virtualVisitId;
 
     const httpOptions = {

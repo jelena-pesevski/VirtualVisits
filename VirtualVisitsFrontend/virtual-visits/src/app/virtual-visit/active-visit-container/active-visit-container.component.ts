@@ -21,7 +21,6 @@ export class ActiveVisitContainerComponent implements OnInit {
       this.videoUrl=visitContent.videoUrl;
       this.ytLink=visitContent.ytLink;
 
-
       var delay=visitContent.endingTimeInMillis- Date.now();
 
       setTimeout(function(){

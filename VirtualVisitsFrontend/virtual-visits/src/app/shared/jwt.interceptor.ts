@@ -22,7 +22,7 @@ export class JwtInterceptor implements HttpInterceptor{
         //adding auth header if user is logged in and request is to the api url
         let authReq=req;
         const token=this.tokenStorageService.getToken();
-        const isLoggedIn=this.loginService.loggedIn;
+        const isLoggedIn=this.loginService.isLoggedIn();
         const isApiUrl=req.url.startsWith(environment.BASE_URL);
         if(token && isApiUrl && isLoggedIn){
             authReq=this.addTokenHeader(req, token);

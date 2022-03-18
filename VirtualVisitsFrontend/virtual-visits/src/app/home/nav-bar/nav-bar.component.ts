@@ -12,7 +12,7 @@ export class NavBarComponent implements OnInit {
   isAdmin:boolean=false;
 
   constructor(private router:Router, private loginService:LoginService) { 
-    if(loginService?.activeUser?.role==="ADMIN"){
+    if(loginService.isAdmin()){
       this.isAdmin=true;
     }
   }

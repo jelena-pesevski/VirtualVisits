@@ -47,8 +47,6 @@ export class MuseumListComponent implements OnInit {
   }
 
   details(element:Museum){
-    console.log("U funkciji za detalje ime muzeja:"+ element.name);
     this.router.navigate(['home/museums/details', element.museumId]);
-    //this.router.navigate(['home/museums/details']);
   }
 }

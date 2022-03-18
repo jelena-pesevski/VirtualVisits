@@ -11,24 +11,12 @@ export class GuardService implements CanActivate {
   constructor(private loginService:LoginService, private router:Router) { }
 
   canActivate(): boolean | Observable<boolean> {
-    /*if (this.loginService.isLogged.) {
-      console.log("ulogovan je");
+    if (this.loginService.isLoggedIn()) {
       return true;
     } else {
-      console.log("nije ulogovan");
       this.router.navigate(['']);
       return false;
-    }*/
-    return this.loginService.isLogged.pipe(map(logged => {
-      if(logged) {
-        console.log("ulogovan je");
-        return true;
-      }
-      console.log("nije ulogovan ");
-      this.router.navigate(['']);
-      return false;
-    })
-    )
+    }
   }
  
 }

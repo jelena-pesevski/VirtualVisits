@@ -5,9 +5,9 @@
       <mat-card-title>{{museum.name}}</mat-card-title>
       <mat-card-subtitle>{{museum.city}}, {{museum.country}}</mat-card-subtitle>
       <mat-card-content>
-        <p>Type:{{museum.type}}</p>
-        <p>Address:{{museum.address}}</p>
-        <p>Phone:{{museum.phone}}</p>
+        <p>Type: {{museum.type}}</p>
+        <p>Address: {{museum.address}}</p>
+        <p>Phone: {{museum.phone}}</p>
       </mat-card-content>
       <mat-card-actions>
         <button mat-raised-button color="primary" (click)="seeOnAMap()">SEE ON A MAP</button>
@@ -18,9 +18,8 @@
   
   <app-weather-forecast-container country="{{museum.country}}"></app-weather-forecast-container>
 
-  
   <div class="upcoming-visits-container table-container" *ngIf="dataSource.length>0">
-      <div class="table-title">Upcoming visits</div>
+      <h2>Upcoming visits</h2>
 
       <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     

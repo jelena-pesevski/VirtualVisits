@@ -18,7 +18,6 @@ export class WeatherForecastContainerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.country);
     this.forecastSource=this.forecastService.getForecast(this.country);
   }
 

@@ -5,4 +5,7 @@ import org.unibl.etf.virtualvisits.services.LogService;
 
 @Service
 public class LogServiceImpl implements LogService {
+
+    //TODO
+    //implement Logging
 }
