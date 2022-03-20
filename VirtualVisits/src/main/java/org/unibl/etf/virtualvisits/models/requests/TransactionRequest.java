@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransactionRequest {
     @NotBlank
     private String firstname;

@@ -32,7 +32,7 @@ export class LoginService {
 
   manageLogin(user:User){
     this.setLoggedIn();
-    this.setIsAdmin(user);
+    this.setIsAdmin(user.role);
     this.setUserId(user.userId);
 
     //set token in session storage and refreshToken in local 
@@ -54,8 +54,8 @@ export class LoginService {
     return window.sessionStorage.getItem(environment.LOGGED_IN_KEY)!=null;
   }
 
-  setIsAdmin(user:User){
-    if(user.role=="ADMIN"){
+  setIsAdmin(role:string){
+    if(role=="ADMIN"){
       window.sessionStorage.setItem(environment.IS_ADMIN_KEY, "true");
     }
   }

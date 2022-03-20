@@ -30,7 +30,6 @@ export class TicketService {
     return this.http.post<any>(this.getTicketServerUrl, JSON.stringify(obj), httpOptions);
   }
 
-
   setVirtualVisit(visit:VirtualVisit){
     this.virtualVisit=visit;
   }

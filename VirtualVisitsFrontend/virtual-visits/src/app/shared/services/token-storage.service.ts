@@ -7,9 +7,6 @@ import { environment } from 'src/environments/environment';
 export class TokenStorageService {
   constructor() { }
 
-  logout():void{
-    sessionStorage.clear();
-  }
 
   saveToken(token:string):void{
     sessionStorage.removeItem(environment.TOKEN_KEY);

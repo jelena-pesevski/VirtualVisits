@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(repository.findById(id).orElseThrow(NotFoundException::new), User.class);
     }
 
+    //used only for otp token setting
     @Override
     public void update(Integer id, User user) throws NotFoundException {
         if (!repository.existsById(id))

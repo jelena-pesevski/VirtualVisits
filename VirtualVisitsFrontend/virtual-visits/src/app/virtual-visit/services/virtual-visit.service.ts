@@ -14,7 +14,7 @@ export class VirtualVisitService {
   private getActiveVisitsUrl=environment.BASE_URL+"virtual-visits/active";
   private attendVisitUrl=environment.BASE_URL+"virtual-visits/attend";
 
-  //current attending visit
+  //current visit that user is attending
   private currAttendingVisit:ActiveVisit | null=null;
 
   constructor(private http:HttpClient) { }

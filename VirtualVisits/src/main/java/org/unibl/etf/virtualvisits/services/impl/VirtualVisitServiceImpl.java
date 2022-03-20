@@ -1,18 +1,11 @@
 package org.unibl.etf.virtualvisits.services.impl;
 
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
-import org.unibl.etf.virtualvisits.models.JwtUser;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
 import org.unibl.etf.virtualvisits.models.entities.TicketEntity;
 import org.unibl.etf.virtualvisits.models.entities.VirtualVisitEntity;
@@ -20,7 +13,6 @@ import org.unibl.etf.virtualvisits.models.requests.AttendVisitRequest;
 import org.unibl.etf.virtualvisits.models.responses.AttendVisitResponse;
 import org.unibl.etf.virtualvisits.repositories.TicketEntityRepository;
 import org.unibl.etf.virtualvisits.repositories.VirtualVisitEntityRepository;
-import org.unibl.etf.virtualvisits.services.TicketService;
 import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
 import java.io.File;

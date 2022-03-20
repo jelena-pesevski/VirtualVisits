@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VirtualVisit {
 
     private Integer virtualVisitId;

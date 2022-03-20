@@ -5,6 +5,8 @@ import org.unibl.etf.virtualvisits.models.enums.Role;
 import org.unibl.etf.virtualvisits.models.enums.UserStatus;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Integer userId;
     private String firstname;

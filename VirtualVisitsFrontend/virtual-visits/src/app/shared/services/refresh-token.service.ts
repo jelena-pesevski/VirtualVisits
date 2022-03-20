@@ -11,7 +11,7 @@ export class RefreshTokenService {
 
   private serverUrl:string=environment.BASE_URL+"refresh-token";
 
-  constructor(private http:HttpClient, private router:Router, private tokenStorageService:TokenStorageService) { }
+  constructor(private http:HttpClient) { }
 
   refreshToken(rfrshToken:string){
     //sending http to refresh token url, with refresh token from local storage in body

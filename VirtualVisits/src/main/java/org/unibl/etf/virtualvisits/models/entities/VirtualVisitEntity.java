@@ -7,6 +7,8 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "virtual_visit")
 public class VirtualVisitEntity {

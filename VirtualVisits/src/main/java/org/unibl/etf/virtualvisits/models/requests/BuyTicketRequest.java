@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BuyTicketRequest {
     @NotNull
     private Integer userId;

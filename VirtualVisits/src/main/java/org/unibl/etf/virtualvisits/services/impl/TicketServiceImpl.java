@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
         try{
             mailService.sendTicket(ticketEntity, user);
         }catch (Exception e){
-            e.printStackTrace();
+           System.out.println("Ticket is not sent");
         }
 
         //get Instant from date and start time
