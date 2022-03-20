@@ -82,12 +82,12 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
     @Override
     public byte[] getImage(Integer virtualVisitId, String fileName) throws NotFoundException {
         //check if virtual visit is active, if it is not exception will be thrown
-     /*   long millis=System.currentTimeMillis();
+        long millis=System.currentTimeMillis();
         Date date=new Date(millis);
         Time time=new Time(millis);
-        VirtualVisitEntity virtualVisit=repository.findActiveVisitById(virtualVisitId, date, time).orElseThrow(NotFoundException::new);*/
+        VirtualVisitEntity virtualVisit=repository.findActiveVisitById(virtualVisitId, date, time).orElseThrow(NotFoundException::new);
 
-        String relativePath=virtualVisitId+ File.separator+ fileName;
+        String relativePath=virtualVisit.getFolder()+ File.separator+ fileName;
         File file=new File(rootFolder+relativePath);
         if(!file.exists()){
             throw new NotFoundException();
@@ -103,12 +103,12 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
     @Override
     public ByteArrayResource getVideo(Integer virtualVisitId, String fileName) throws NotFoundException {
         //check if virtual visit is active, if it is not exception will be thrown
-   /*     long millis=System.currentTimeMillis();
+        long millis=System.currentTimeMillis();
         Date date=new Date(millis);
         Time time=new Time(millis);
-        VirtualVisitEntity virtualVisit=repository.findActiveVisitById(virtualVisitId, date, time).orElseThrow(NotFoundException::new);*/
+        VirtualVisitEntity virtualVisit=repository.findActiveVisitById(virtualVisitId, date, time).orElseThrow(NotFoundException::new);
 
-        String relativePath=virtualVisitId+ File.separator+ fileName;
+        String relativePath=virtualVisit.getFolder()+ File.separator+ fileName;
         File file=new File(rootFolder+relativePath);
         if(!file.exists()){
             throw new NotFoundException();
@@ -148,12 +148,12 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
             response.setYtLink(virtualVisit.getYtLink());
         }
 
-        String reqBegin=tourImageUrl+virtualVisit.getFolder()+"/";
+        String reqBegin=tourImageUrl+virtualVisit.getVirtualVisitId()+"/";
         for(File f:files){
             if(!f.getName().endsWith(".mp4")){
                 imagesUrls.add(reqBegin+f.getName());
             }else{
-                videoUrl=tourVideoUrl+virtualVisit.getFolder()+"/"+f.getName();
+                videoUrl=tourVideoUrl+virtualVisit.getVirtualVisitId()+"/"+f.getName();
             }
         }
 

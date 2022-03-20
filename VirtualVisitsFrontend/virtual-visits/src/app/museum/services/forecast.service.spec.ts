@@ -24,27 +24,4 @@ describe('ForecastService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
- /* it('should call forecast for three cities', fakeAsync((done:DoneFn)=>{
-    let country:string="France";
-    var obj:any={
-      "error": false,
-      "msg": "cities in France retrieved",
-      "data": [
-          "Aast",
-          "Abancourt",
-          "Abbans-Dessus",
-          "Abbaretz",
-          "Abbecourt"
-    ]};
-    spyOn<any>(service, 'getCitiesForCountry').and.returnValue(of(obj));
-    
-    var array=service.getForecast(country);
-
-    expect(array.length).withContext("success for all three cities").toBe(3);
-    
-    expect(httpClientSpy.get.calls.count())
-    .withContext('three calls')
-    .toBe(3);
-  }));*/
 });

@@ -28,8 +28,8 @@ export class JwtInterceptor implements HttpInterceptor{
             authReq=this.addTokenHeader(req, token);
         }
         return next.handle(authReq).pipe(catchError((error:any)=>{
-            if (error instanceof HttpErrorResponse && !authReq.url.includes('/login') && !authReq.url.includes("/refresh-token") && error.status === 401) {
-                return this.handle401Error(authReq, next);
+            if (error instanceof HttpErrorResponse && error.status === 403 && !authReq.url.includes('/login') && !authReq.url.includes("/refresh-token")  && !authReq.url.includes("/sign-up") ) {
+                return this.handle403Error(authReq, next);
             }
             return throwError(() => error);
         }));
@@ -39,7 +39,7 @@ export class JwtInterceptor implements HttpInterceptor{
         return request.clone({ headers: request.headers.set(environment.TOKEN_HEADER_KEY,'Bearer '+ token) });
     }
 
-    private handle401Error(req:HttpRequest<any>, next:HttpHandler){
+    private handle403Error(req:HttpRequest<any>, next:HttpHandler){
         //if refreshing is not in progress
         if(!this.isRefreshing){
             this.isRefreshing=true;
@@ -59,7 +59,7 @@ export class JwtInterceptor implements HttpInterceptor{
                     catchError((err)=>{
                         this.isRefreshing=false;
                         this.loginService.logout();
-                        //should navigate
+                        //should navigate in each component
                         return throwError(() => err);
                     })
                 )

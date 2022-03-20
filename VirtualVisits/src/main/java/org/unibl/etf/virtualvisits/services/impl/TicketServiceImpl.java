@@ -66,6 +66,7 @@ public class TicketServiceImpl implements TicketService {
         boolean bankResponse=contactBank(transactionRequest);
 
         if(!bankResponse){
+            System.out.println("Transaction failed");
             throw new NotFoundException();
         }
 
@@ -86,16 +87,14 @@ public class TicketServiceImpl implements TicketService {
         //then schedule task
         LocalDate localDate = virtualVisit.getDate().toLocalDate();
         LocalTime localTime=virtualVisit.getStart().toLocalTime();
-        LocalDateTime ldt=localDate.atTime(localTime);
-        Instant instant= ZonedDateTime.of(ldt, ZoneId.systemDefault()).toInstant();
+        Instant instant= getInstant(localDate, localTime);
 
         threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getMail(), "Virtual visit at "+ virtualVisit.getMuseumName()+" starts in an hour."), Date.from(instant.minus(1, ChronoUnit.HOURS)));
 
         //get Instant from date and ending time, and then schedule task
         LocalTime durationTime=virtualVisit.getDuration().toLocalTime();
         localTime=localTime.plus(Duration.ofNanos(durationTime.toNanoOfDay()));
-        ldt=localDate.atTime(localTime);
-        instant= ZonedDateTime.of(ldt, ZoneId.systemDefault()).toInstant();
+        instant= getInstant(localDate, localTime);
 
         threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getMail(), "Virtual visit at "+virtualVisit.getMuseumName()+ " ends in 5 minutes."), Date.from(instant.minus(5, ChronoUnit.MINUTES)));
     }
@@ -131,4 +130,8 @@ public class TicketServiceImpl implements TicketService {
         return String.valueOf(System.currentTimeMillis());
     }
 
+    private Instant getInstant(LocalDate localDate, LocalTime localTime){
+        LocalDateTime ldt=localDate.atTime(localTime);
+        return ZonedDateTime.of(ldt, ZoneId.systemDefault()).toInstant();
+    }
 }

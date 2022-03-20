@@ -45,7 +45,11 @@ export class BuyTicketComponent implements OnInit {
             this.router.navigate(['home/museums']);
       },
       error:err=>{
-       this.error();
+        if(err.status==401){
+          this.router.navigate(['']);
+        }else{
+          this.error();
+        }
       }
     })
   }

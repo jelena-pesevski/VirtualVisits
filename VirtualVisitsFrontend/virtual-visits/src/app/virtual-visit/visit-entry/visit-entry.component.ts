@@ -38,11 +38,15 @@ export class VisitEntryComponent implements OnInit {
         this.router.navigate(['virtual-visits/attend']);
       },
       error:err=>{
-        console.log(err);
-        this.snackBar.open("Ticket number is not valid", undefined, {
-          duration: 2000
-        });
-        this.router.navigate(['home/virtual-visits']);
+        if(err.status==401){
+          this.router.navigate(['']);
+        }else{
+          console.log(err);
+          this.snackBar.open("Ticket number is not valid", undefined, {
+            duration: 2000
+          });
+          this.router.navigate(['home/virtual-visits']);
+        }
       }
     })
   }

@@ -32,15 +32,6 @@ CREATE TABLE `log` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `log`
---
-
-LOCK TABLES `log` WRITE;
-/*!40000 ALTER TABLE `log` DISABLE KEYS */;
-/*!40000 ALTER TABLE `log` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `museum`
 --
 
@@ -62,16 +53,6 @@ CREATE TABLE `museum` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `museum`
---
-
-LOCK TABLES `museum` WRITE;
-/*!40000 ALTER TABLE `museum` DISABLE KEYS */;
-INSERT INTO `museum` VALUES (1,'Louvre Museum','test','test','Paris','France','Art and Antiques',2.33862900,48.86029400),(2,'National Museum','test','test','Prague','Czech Republic','History ',50.07890000,-14.43090000),(3,'Acropolis Museum','test','test','Athens','Greece','Archeological',23.72611000,37.97083300),(4,'Art History Museum','test','test','Vienna','Austria','Art',16.36140000,48.20370000),(5,'The Prado','test','test','Madrid','Spain','Art',40.27852000,-4.30534000),(6,'The Museum Of The Second World War','test','test','Gdansk','Poland','History',18.66000000,54.35600000),(7,'Viking Ship Museum','test','test','Oslo','Norway','History',10.68440000,59.90490000),(8,'Orsay Museum','test','test','Paris','France','Art',2.32660000,48.86000000),(9,'The British Museum','test','test','London','United Kingdom','Art and History',0.12700000,51.51940000),(10,'Anne Frank House','test','test','Amsterdam','Netherlands','Biographical',4.88400000,52.37520000),(12,'National Museum Of Scotland','test','test','Edinburgh','Scotland','National',3.19060000,55.94700000),(13,'Rijksmuseum','test','test','Amsterdam','Netherlands','Art and History',-4.88520000,52.36000000);
-/*!40000 ALTER TABLE `museum` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ticket`
 --
 
@@ -88,18 +69,8 @@ CREATE TABLE `ticket` (
   KEY `fk_ticket_virtual_visit1_idx` (`virtual_visit_id`),
   CONSTRAINT `fk_ticket_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
   CONSTRAINT `fk_ticket_virtual_visit1` FOREIGN KEY (`virtual_visit_id`) REFERENCES `virtual_visit` (`virtual_visit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ticket`
---
-
-LOCK TABLES `ticket` WRITE;
-/*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES (7,1,7,'1647263426566'),(8,1,1,'1647263494890'),(9,1,8,'1647263494891'),(10,1,8,'1647541986194');
-/*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -124,16 +95,6 @@ CREATE TABLE `user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Admin','Test','Admin1234567','edfff33654ea3dbd47b0f81addd53ffc6d669ec9d32adabbb5c1f10cd7104e8d','jpesevski99@gmail.com',1,1,'1647710166440'),(2,'Test','Test','Test12345678','022731e8df52163b49560c77678583a65938caa0fb6d67a34ac8aabdb14ec230','test@mail.com',0,1,'1646824973106'),(3,'Jelena','Pesevski','jelena123456','3fc351a5e33466b81c50703bf39b3bbb74510b1e776f48e76418d2ecf3f94396','jelena.pesevski@student.etf.unibl.org',0,1,'1647646576142');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `virtual_visit`
 --
 
@@ -154,16 +115,6 @@ CREATE TABLE `virtual_visit` (
   CONSTRAINT `fk_virtual_visit_museum` FOREIGN KEY (`museum_id`) REFERENCES `museum` (`museum_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `virtual_visit`
---
-
-LOCK TABLES `virtual_visit` WRITE;
-/*!40000 ALTER TABLE `virtual_visit` DISABLE KEYS */;
-INSERT INTO `virtual_visit` VALUES (1,1,'2023-04-20','18:00:00','03:00:00',50.00,'test',NULL),(2,2,'2020-03-20','17:00:00','01:00:00',50.00,'test',NULL),(3,2,'2022-03-06','22:00:00','01:00:00',50.00,'test',NULL),(4,1,'2022-03-06','11:00:00','02:00:00',50.00,'test',NULL),(5,1,'2022-03-11','17:30:00','04:00:00',50.00,'test',NULL),(6,2,'2022-03-12','13:00:00','01:30:00',50.00,'test',NULL),(7,1,'2022-04-01','16:00:00','02:00:00',50.00,'test',NULL),(8,1,'2022-03-18','20:38:00','05:05:00',25.00,'1',NULL);
-/*!40000 ALTER TABLE `virtual_visit` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -174,4 +125,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-19 18:27:03
+-- Dump completed on 2022-03-20 15:23:09

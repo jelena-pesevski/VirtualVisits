@@ -38,10 +38,9 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public RefreshTokenResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws UnauthorizedException {
+    public RefreshTokenResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) throws UnauthorizedException {
         return authService.refreshToken(refreshTokenRequest);
     }
-
 
     //TODO
     //add logout endpoint

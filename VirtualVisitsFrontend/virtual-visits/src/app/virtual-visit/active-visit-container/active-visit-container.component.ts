@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/auth/services/login.service';
 import { VirtualVisitService } from '../services/virtual-visit.service';
+import {DomSanitizer,SafeResourceUrl,} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-active-visit-container',
@@ -12,14 +13,17 @@ export class ActiveVisitContainerComponent implements OnInit {
 
   imagesUrls:string[] | null =[];
   videoUrl:string | null =null;
-  ytLink: string | null=null;
+  ytLink: any | null=null;
 
-  constructor(private loginService:LoginService, private virtualVisitService:VirtualVisitService, private router:Router) {
+  constructor(private loginService:LoginService, private virtualVisitService:VirtualVisitService, private router:Router, public sanitizer:DomSanitizer) {
     var visitContent=virtualVisitService.getCurrAttendingVisit();
     if(visitContent){
       this.imagesUrls=visitContent.imagesUrls;
       this.videoUrl=visitContent.videoUrl;
-      this.ytLink=visitContent.ytLink;
+      if(visitContent.ytLink){
+        this.ytLink=this.sanitizer.bypassSecurityTrustResourceUrl(visitContent.ytLink);
+      }
+      
 
       var delay=visitContent.endingTimeInMillis- Date.now();
 
