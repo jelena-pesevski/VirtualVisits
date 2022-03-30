@@ -1,0 +1,28 @@
+.content{
+	height:100vh;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mdl-card__title-text {
+  color:#2196f3;
+}
+
+tr,
+th,
+td {
+  border: 1px #2196f3 solid;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+table{
+	margin: 10px;
+	border-collapse: collapse;
+	width: calc(100% - 20px);
+}
