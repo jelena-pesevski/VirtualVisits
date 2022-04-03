@@ -1,0 +1,8 @@
+<div class="content">
+    <div class="my-google-map">
+        <google-map [options]="mapOptions" (mapClick)="click($event)">
+            <map-marker *ngIf="marker.position" [position]="marker.position"></map-marker>
+         </google-map>
+    </div>
+    <button mat-raised-button color="primary" (click)="saveGeolocation()" >Save</button>
+</div>

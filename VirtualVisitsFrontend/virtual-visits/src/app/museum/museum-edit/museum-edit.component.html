@@ -1,0 +1,46 @@
+<h1 *ngIf="!isEdit" mat-dialog-title>New museum</h1>
+<h1 *ngIf="isEdit" mat-dialog-title>Update museum</h1>
+<form [formGroup]="form">
+    <div mat-dialog-content class="museum-form">
+        <mat-form-field>
+            <input matInput placeholder="Name" required formControlName="name" autocomplete="off" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Address" required formControlName="address" autocomplete="off" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Phone" required formControlName="phone" autocomplete="off" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Type" required formControlName="type" autocomplete="off" />
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="country" required (selectionChange)="countryChanged($event)">
+                <mat-option *ngFor="let country of countries" [value]="country.name.common">
+                    {{country.name.common}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>City</mat-label>
+            <mat-select formControlName="city" required (selectionChange)="cityChanged($event)">
+                <mat-option *ngFor="let city of cities" [value]="city.city">
+                    {{city.city}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="setGeolocation()" >Set geolocation</button>
+ 
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="close()">Cancel</button>
+        <button mat-button [disabled]="form.invalid" type="submit" (click)="save(form)">Save</button>
+    </div>
+</form>

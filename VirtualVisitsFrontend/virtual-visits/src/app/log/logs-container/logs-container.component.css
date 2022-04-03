@@ -1,0 +1,17 @@
+.content {
+  padding: 10px;
+}
+
+.mat-cell,
+.mat-header-cell {
+  padding: 8px 8px 8px 0;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+}
+
+.btn-holder {
+  padding: 0 10px 10px 10px;
+}

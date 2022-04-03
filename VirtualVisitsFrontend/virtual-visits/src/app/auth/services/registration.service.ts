@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 })
 export class RegistrationService {
 
-  private serverUrl: string=environment.BASE_URL+"sign-up";
 
   constructor(private http:HttpClient) { }
 
@@ -18,6 +17,6 @@ export class RegistrationService {
         'Content-Type':  'application/json'
       })
     };
-    return this.http.post<any>(this.serverUrl, body, httpOptions);
+    return this.http.post<any>(`${environment.BASE_URL}/auth/sign-up`, body, httpOptions);
   }
 }

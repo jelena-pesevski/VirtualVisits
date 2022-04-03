@@ -56,4 +56,10 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(IntegrityException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleIntegrityException(){
+
+    }
+
 }

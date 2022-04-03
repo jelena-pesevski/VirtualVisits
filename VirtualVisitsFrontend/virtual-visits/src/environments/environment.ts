@@ -4,14 +4,15 @@
 
 export const environment = {
   production: false,
-  BASE_URL:"http://localhost:9000/",
+  BASE_URL:"http://localhost:9000",
   BANK_URL:"http://localhost:9001/transactions",
   TOKEN_KEY:"token",
   REFRESH_TOKEN_KEY:"rfrshTkn",
   ID_KEY:"id",
   LOGGED_IN_KEY:"isLogged",
   IS_ADMIN_KEY:"isAdmin",
-  TOKEN_HEADER_KEY:"Authorization"
+  TOKEN_HEADER_KEY:"Authorization",
+  OTP_TOKEN_KEY:"otp"
 };
 
 /*

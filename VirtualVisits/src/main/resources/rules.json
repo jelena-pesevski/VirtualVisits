@@ -6,19 +6,34 @@
         "roles": ["ADMIN", "USER"]
       },
       {
+        "methods": ["POST", "PUT", "DELETE"],
+        "pattern": "/museums/**",
+        "roles": ["ADMIN"]
+      },
+      {
         "methods": ["GET", "POST"],
         "pattern": "/virtual-visits/**",
         "roles": ["ADMIN", "USER"]
       },
       {
-        "methods": ["POST"],
+        "methods": [ "PUT", "DELETE"],
+        "pattern": "/virtual-visits/**",
+        "roles": ["ADMIN"]
+      },
+      {
+        "methods": ["GET"],
         "pattern": "/users/**",
-        "roles": ["ADMIN", "USER"]
+        "roles": ["ADMIN"]
       },
       {
         "methods": ["POST"],
         "pattern": "/ticket",
         "roles": ["ADMIN", "USER"]
+      },
+      {
+        "methods": ["GET"],
+        "pattern": "/logs/**",
+        "roles": ["ADMIN"]
       }
     ]
 }

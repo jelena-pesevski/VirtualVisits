@@ -28,7 +28,7 @@ export class JwtInterceptor implements HttpInterceptor{
             authReq=this.addTokenHeader(req, token);
         }
         return next.handle(authReq).pipe(catchError((error:any)=>{
-            if (error instanceof HttpErrorResponse && error.status === 403 && !authReq.url.includes('/login') && !authReq.url.includes("/refresh-token")  && !authReq.url.includes("/sign-up") ) {
+            if (error instanceof HttpErrorResponse && error.status === 403 && !authReq.url.includes('/login') && !authReq.url.includes("/refresh-token")  && !authReq.url.includes("/sign-up") && !authReq.url.includes("/logout")) {
                 return this.handle403Error(authReq, next);
             }
             return throwError(() => error);

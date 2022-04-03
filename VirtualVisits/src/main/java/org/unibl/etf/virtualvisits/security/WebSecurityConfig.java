@@ -67,8 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private HttpSecurity createAuthorizationRules(HttpSecurity http) throws Exception{
         AuthorizationRules authorizationRules=new ObjectMapper().readValue(new ClassPathResource("rules.json").getInputStream(), AuthorizationRules.class);
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry interceptor=http.authorizeRequests();
-        interceptor=interceptor.antMatchers(HttpMethod.POST, "/login").permitAll().antMatchers(HttpMethod.POST, "/sign-up").permitAll().antMatchers(HttpMethod.POST, "/refresh-token").permitAll()
-                .antMatchers(HttpMethod.GET, "/virtual-visits/tour-video/**").permitAll().antMatchers(HttpMethod.GET, "/virtual-visits/tour-image/**").permitAll();
+        interceptor=interceptor.antMatchers(HttpMethod.POST, "/auth/login").permitAll().antMatchers(HttpMethod.POST, "/auth/sign-up").permitAll().antMatchers(HttpMethod.POST, "/auth/refresh-token").permitAll()
+                .antMatchers(HttpMethod.GET, "/virtual-visits/tour-video/**").permitAll().antMatchers(HttpMethod.GET, "/virtual-visits/tour-image/**").permitAll().antMatchers(HttpMethod.GET, "/auth/logout").permitAll();
         for(Rule rule: authorizationRules.getRules()){
             if(rule.getMethods().isEmpty()){
                 interceptor=interceptor.antMatchers(rule.getPattern()).hasAnyAuthority(rule.getRoles().toArray(String[]::new));

@@ -30,4 +30,7 @@ export class MapContainerComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
+
+
+
 }

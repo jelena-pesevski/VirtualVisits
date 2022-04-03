@@ -20,11 +20,15 @@ export class VirtualVisitService {
   constructor(private http:HttpClient) { }
 
   getUpcomingVisitsForMuseum(museumId:number):Observable<VirtualVisit[]>{
-    return this.http.get<VirtualVisit[]>(this.getUpcomingVisitsForMuseumUrl+"?id="+museumId);
+    return this.http.get<VirtualVisit[]>(`${environment.BASE_URL}/virtual-visits/upcoming/museum?id=${museumId}`);
   }
 
   getActiveVisits():Observable<VirtualVisit[]>{
-    return this.http.get<VirtualVisit[]>(this.getActiveVisitsUrl);
+    return this.http.get<VirtualVisit[]>(`${environment.BASE_URL}/virtual-visits/active`);
+  }
+
+  getUpcoming():Observable<VirtualVisit[]>{
+    return this.http.get<VirtualVisit[]>(`${environment.BASE_URL}/virtual-visits/upcoming`);
   }
 
   attendVisit(obj:any):Observable<ActiveVisit>{
@@ -34,7 +38,7 @@ export class VirtualVisitService {
       })
     };
 
-    return this.http.post<ActiveVisit>(this.attendVisitUrl, JSON.stringify(obj), httpOptions);
+    return this.http.post<ActiveVisit>(`${environment.BASE_URL}/virtual-visits/attend`, JSON.stringify(obj), httpOptions);
   }
 
   getCurrAttendingVisit(): ActiveVisit | null{
@@ -44,4 +48,9 @@ export class VirtualVisitService {
   setCurrAttendingVisit(visit:ActiveVisit){
     this.currAttendingVisit=visit;
   }
+
+  deleteMuseum(visitId:number) : Observable<any>{
+    return this.http.delete<any>(`${environment.BASE_URL}/virtual-visits/${visitId}`);
+  }
+
 }

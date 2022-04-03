@@ -1,9 +1,8 @@
 package org.unibl.etf.virtualvisits.controllers;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.unibl.etf.virtualvisits.exceptions.ConflictException;
+import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
 import org.unibl.etf.virtualvisits.exceptions.UnauthorizedException;
 import org.unibl.etf.virtualvisits.models.responses.LoginResponse;
 import org.unibl.etf.virtualvisits.models.responses.RefreshTokenResponse;
@@ -16,6 +15,7 @@ import org.unibl.etf.virtualvisits.services.UserService;
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -42,6 +42,8 @@ public class AuthController {
         return authService.refreshToken(refreshTokenRequest);
     }
 
-    //TODO
-    //add logout endpoint
+    @GetMapping("/logout")
+    public boolean logout(@RequestHeader(value = "userId") Integer userId) throws NotFoundException {
+        return authService.logout(userId);
+    }
 }

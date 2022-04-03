@@ -1,0 +1,91 @@
+<div class="content">
+    <div class="header">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Nat">
+      </mat-form-field> 
+
+      <button mat-icon-button (click)="add()" class="right-button">
+        <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div class="table-container mat-elevation-z8">
+  
+      <table mat-table [dataSource]="dataSource" matSort>
+    
+        <!-- museum_id  -->
+        <ng-container matColumnDef="museumId">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let row"> {{row.museumId}} </td>
+        </ng-container>
+    
+        <!-- name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+
+        <!-- city -->
+        <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef> City </th>
+            <td mat-cell *matCellDef="let row"> {{row.city}} </td>
+          </ng-container>
+
+          <!-- country -->
+        <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef> Country </th>
+            <td mat-cell *matCellDef="let row"> {{row.country}} </td>
+        </ng-container>
+    
+        <!-- address -->
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef> Address </th>
+          <td mat-cell *matCellDef="let row"> {{row.address}} </td>
+        </ng-container>
+
+        <!-- phone -->
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef> Phone </th>
+            <td mat-cell *matCellDef="let row"> {{row.phone}} </td>
+        </ng-container>
+  
+        <!-- type -->
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let row"> {{row.type}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="geolocation">
+          <th mat-header-cell  *matHeaderCellDef > </th>
+          <td mat-cell *matCellDef="let row" >
+               <button mat-icon-button (click)="seeOnAMap(row)" >
+                    <mat-icon>map</mat-icon>
+               </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell  *matHeaderCellDef > </th>
+            <td mat-cell *matCellDef="let row" >
+                    <button mat-icon-button (click)="edit(row)" >
+                        <mat-icon>edit</mat-icon>
+                    </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell  *matHeaderCellDef > </th>
+            <td mat-cell *matCellDef="let row" >
+                    <button mat-icon-button (click)="delete(row)" >
+                        <mat-icon>delete</mat-icon>
+                    </button>
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      </table>
+    </div>
+  </div>
+

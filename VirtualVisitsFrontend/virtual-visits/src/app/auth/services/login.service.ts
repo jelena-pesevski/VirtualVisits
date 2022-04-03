@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginService {
 
-  private serverUrl: string=environment.BASE_URL+"login";
 
   constructor(private http:HttpClient, private tokenStorageService:TokenStorageService) { }
 
@@ -27,13 +26,17 @@ export class LoginService {
     };
 
     //send post to server at /login
-    return this.http.post<any>(this.serverUrl, JSON.stringify(body), httpOptions);
+    return this.http.post<any>(`${environment.BASE_URL}/auth/login`, JSON.stringify(body), httpOptions);
   }
 
   manageLogin(user:User){
     this.setLoggedIn();
     this.setIsAdmin(user.role);
     this.setUserId(user.userId);
+
+    if(this.isAdmin() && user.otpToken){
+      this.setOtp(user.otpToken);
+    }
 
     //set token in session storage and refreshToken in local 
     this.tokenStorageService.saveToken(user.token);
@@ -43,7 +46,25 @@ export class LoginService {
   }
 
   logout(){
+    //send post with user id
+    this.sendLogout().subscribe(result => { 
+      console.log("Logged out "+ result);
+    });
     sessionStorage.clear();
+  }
+
+  sendLogout():Observable<any>{
+    var userId=this.getUserId();
+    var httpOptions;
+    if(userId){
+      httpOptions = {
+        headers: new HttpHeaders({
+         'userId':userId
+        })
+      };
+     
+    }
+    return this.http.get(`${environment.BASE_URL}/auth/logout`, httpOptions);
   }
 
   setLoggedIn(){
@@ -70,5 +91,13 @@ export class LoginService {
 
   getUserId(){
     return window.sessionStorage.getItem(environment.ID_KEY);
+  }
+
+  setOtp(otpToken:string){
+    window.sessionStorage.setItem(environment.OTP_TOKEN_KEY, otpToken);
+  }
+
+  getOtp(){
+    return window.sessionStorage.getItem(environment.OTP_TOKEN_KEY);
   }
 }

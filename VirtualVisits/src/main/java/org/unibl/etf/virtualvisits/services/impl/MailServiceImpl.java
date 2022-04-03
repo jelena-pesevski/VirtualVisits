@@ -14,7 +14,6 @@ import org.unibl.etf.virtualvisits.models.User;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
 import org.unibl.etf.virtualvisits.models.entities.TicketEntity;
 import org.unibl.etf.virtualvisits.services.MailService;
-import org.unibl.etf.virtualvisits.services.UserService;
 import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
 import javax.activation.DataSource;

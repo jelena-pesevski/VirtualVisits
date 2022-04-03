@@ -20,10 +20,14 @@ export class NavBarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public logout(){
+   logout(){
     this.loginService.logout();
 
     //navigating to login page
     this.router.navigate(['']);
+  }
+
+  goToJSPApp(){
+    window.open(`http:localhost:8080/VirtualVisitsAdminApp/home.jsp?otp=${this.loginService.getOtp()}`, "_blank");
   }
 }

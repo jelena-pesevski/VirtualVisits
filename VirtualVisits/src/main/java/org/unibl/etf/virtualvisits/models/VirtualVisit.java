@@ -9,7 +9,6 @@ import java.sql.Time;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VirtualVisit {
-
     private Integer virtualVisitId;
     private Date date;
     private Time start;
@@ -19,5 +18,4 @@ public class VirtualVisit {
     private String ytLink;
     private String museumId;
     private String museumName;
-
 }

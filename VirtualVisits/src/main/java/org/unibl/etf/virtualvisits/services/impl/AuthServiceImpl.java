@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
 import org.unibl.etf.virtualvisits.exceptions.UnauthorizedException;
 import org.unibl.etf.virtualvisits.models.JwtUser;
+import org.unibl.etf.virtualvisits.models.entities.LogEntity;
 import org.unibl.etf.virtualvisits.models.responses.LoginResponse;
 import org.unibl.etf.virtualvisits.models.responses.RefreshTokenResponse;
 import org.unibl.etf.virtualvisits.models.User;
@@ -18,8 +21,10 @@ import org.unibl.etf.virtualvisits.models.enums.Role;
 import org.unibl.etf.virtualvisits.models.requests.LoginRequest;
 import org.unibl.etf.virtualvisits.models.requests.RefreshTokenRequest;
 import org.unibl.etf.virtualvisits.services.AuthService;
+import org.unibl.etf.virtualvisits.services.LogService;
 import org.unibl.etf.virtualvisits.services.UserService;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Service
@@ -27,9 +32,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserService service;
+    private final UserService userService;
 
     private final ModelMapper modelMapper;
+
+    private final LogService logService;
 
     @Value("${authorization.token.secret}")
     private String tokenSecret;
@@ -43,10 +50,11 @@ public class AuthServiceImpl implements AuthService {
     @Value("${authorization.refresh.token.expiration-time}")
     private String refreshTokenExpirationTime;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserService service, ModelMapper modelMapper) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserService service, ModelMapper modelMapper, LogService logService) {
         this.authenticationManager = authenticationManager;
-        this.service = service;
+        this.userService = service;
         this.modelMapper=modelMapper;
+        this.logService = logService;
     }
 
     @Override
@@ -55,18 +63,22 @@ public class AuthServiceImpl implements AuthService {
         try{
             Authentication authenticate= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
             JwtUser user=(JwtUser) authenticate.getPrincipal();
-            User userObject=service.findById(user.getId());
+            User userObject= userService.findById(user.getId());
 
             //set otpToken
             String otpToken=String.valueOf(System.currentTimeMillis());
             userObject.setOtpToken(otpToken);
-            service.update(userObject.getUserId(), userObject);
+            //set logged in
+            userObject.setIsLoggedIn(true);
+            userService.update(userObject.getUserId(), userObject);
 
             response=modelMapper.map(userObject, LoginResponse.class);
             response.setToken(generateJwt(user));
             response.setRefreshToken(generateRefreshToken(user));
 
+            logService.insert(new LogEntity(0,  user.getUsername()+ " logged in.", "LOGIN", Instant.now()));
         }catch(Exception e){
+            logService.insert(new LogEntity(0, "Unsuccessful login with username "+ request.getUsername() +" and password "+ request.getPassword(), "LOGIN-TRY", Instant.now()));
             throw new UnauthorizedException();
         }
         return response;
@@ -83,10 +95,22 @@ public class AuthServiceImpl implements AuthService {
             JwtUser user=new JwtUser(Integer.valueOf(claims.getId()), claims.getSubject(), null, Role.valueOf(claims.get("role", String.class)));
             refreshTokenResponse=new RefreshTokenResponse();
             refreshTokenResponse.setToken(generateJwt(user));
+
+            logService.insert(new LogEntity(0,  user.getUsername()+ " refreshed JWT.", "REFRESH-TOKEN", Instant.now()));
         }catch(Exception e){
             throw new UnauthorizedException();
         }
         return refreshTokenResponse;
+    }
+
+    @Override
+    public boolean logout(Integer userId) throws NotFoundException {
+        User userObject= userService.findById(userId);
+        userObject.setIsLoggedIn(false);
+        userService.update(userObject.getUserId(), userObject);
+        logService.insert(new LogEntity(0,  userObject.getUsername()+ " logged out.", "LOGOUT", Instant.now()));
+
+        return true;
     }
 
     private String generateJwt(JwtUser user){

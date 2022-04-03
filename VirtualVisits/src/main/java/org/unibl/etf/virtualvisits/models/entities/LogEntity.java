@@ -4,8 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "log")
 public class LogEntity {
@@ -14,13 +17,12 @@ public class LogEntity {
     @Column(name = "log_id", nullable = false)
     private Integer logId;
     @Basic
-    @Column(name = "username", nullable = false, length = 45)
-    private String username;
+    @Column(name = "info", nullable = false, length = 90)
+    private String info;
     @Basic
     @Column(name = "action", nullable = false, length = 45)
     private String action;
     @Basic
-    @Column(name = "datetime", nullable = false)
-    private Timestamp dateTime;
-
+    @Column(name = "date_time", nullable = false)
+    private Instant dateTime;
 }

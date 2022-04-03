@@ -1,5 +1,6 @@
 package org.unibl.etf.virtualvisits.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.unibl.etf.virtualvisits.models.enums.Role;
 import org.unibl.etf.virtualvisits.models.enums.UserStatus;
@@ -16,5 +17,6 @@ public class User {
     private Role role;
     private UserStatus status;
     private String otpToken;
-
+    @JsonIgnore
+    private Boolean isLoggedIn;
 }

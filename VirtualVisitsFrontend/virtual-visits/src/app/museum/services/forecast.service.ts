@@ -11,8 +11,6 @@ export class ForecastService {
   forecastSource: ForecastObject[]=[];
 
   private getCitiesUrl:string="https://countriesnow.space/api/v0.1/countries/cities";
-  private weatherApiUrlBegin:string="http://api.openweathermap.org/data/2.5/weather?q=";
-  private weatherApiUrlEnd:string="&appid=04ac1df18298293deb5cab926f78f2a9&units=metric";
 
   constructor(private http:HttpClient) { }
 
@@ -41,7 +39,7 @@ export class ForecastService {
       //get forecast forecast for three cities
       cities=shuffled.slice(0,3);
       cities.forEach(c => {
-          this.http.get<any>(this.weatherApiUrlBegin+c+this.weatherApiUrlEnd).subscribe({
+          this.http.get<any>(`http://api.openweathermap.org/data/2.5/weather?q=${c}&appid=04ac1df18298293deb5cab926f78f2a9&units=metric`).subscribe({
             next:data=>{
               this.forecastSource.push(new ForecastObject(data.name, data.main.temp, data.weather[0].icon));
             },

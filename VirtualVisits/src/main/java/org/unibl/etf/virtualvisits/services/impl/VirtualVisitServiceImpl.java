@@ -3,16 +3,21 @@ package org.unibl.etf.virtualvisits.services.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
+import org.unibl.etf.virtualvisits.models.JwtUser;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
+import org.unibl.etf.virtualvisits.models.entities.LogEntity;
 import org.unibl.etf.virtualvisits.models.entities.TicketEntity;
 import org.unibl.etf.virtualvisits.models.entities.VirtualVisitEntity;
 import org.unibl.etf.virtualvisits.models.requests.AttendVisitRequest;
 import org.unibl.etf.virtualvisits.models.responses.AttendVisitResponse;
 import org.unibl.etf.virtualvisits.repositories.TicketEntityRepository;
 import org.unibl.etf.virtualvisits.repositories.VirtualVisitEntityRepository;
+import org.unibl.etf.virtualvisits.services.LogService;
 import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
 import java.io.File;
@@ -35,6 +40,8 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
 
     private final ModelMapper modelMapper;
 
+    private final LogService logService;
+
     @Value("${visits.root.folder}")
     private String rootFolder;
 
@@ -44,12 +51,12 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
     @Value("${tour-video.url}")
     private String tourVideoUrl;
 
-    public VirtualVisitServiceImpl(VirtualVisitEntityRepository repository, ModelMapper modelMapper, TicketEntityRepository ticketEntityRepository) {
+    public VirtualVisitServiceImpl(VirtualVisitEntityRepository repository, ModelMapper modelMapper, TicketEntityRepository ticketEntityRepository, LogService logService) {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.ticketEntityRepository = ticketEntityRepository;
+        this.logService = logService;
     }
-
 
     @Override
     public List<VirtualVisit> findAll() {
@@ -123,46 +130,78 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
 
     @Override
     public AttendVisitResponse attendVirtualVisit(AttendVisitRequest request) throws InvalidTicketException {
-        //check if ticket is valid
-        TicketEntity ticketEntity=ticketEntityRepository.findByVirtualVisitIdAndAndTicketNumber(request.getVirtualVisitId(), request.getTicketNumber()).orElseThrow(InvalidTicketException::new);
+        JwtUser user= (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        //check if visit is active
+        try {
+            //check if ticket is valid
+            TicketEntity ticketEntity = ticketEntityRepository.findByVirtualVisitIdAndAndTicketNumber(request.getVirtualVisitId(), request.getTicketNumber()).orElseThrow(InvalidTicketException::new);
+
+            //if user id from ticket is not id for currently authenticated user
+            if(!ticketEntity.getUserId().equals(user.getId())){
+                throw new InvalidTicketException();
+            }
+
+            //check if visit is active
+            long millis = System.currentTimeMillis();
+            Date date = new Date(millis);
+            Time time = new Time(millis);
+            VirtualVisitEntity virtualVisit = repository.findActiveVisitById(request.getVirtualVisitId(), date, time).orElseThrow(InvalidTicketException::new);
+
+            //ticket is valid if no exception is thrown
+            logService.insert(new LogEntity(0, "Sending url-s for visit "+ virtualVisit.getVirtualVisitId()+" to user:"+ user.getUsername(), "ATTEND-VISIT", Instant.now()));
+            //list all files from folder
+            String folderPath = rootFolder + virtualVisit.getFolder();
+            File virtualVisitRoot = new File(folderPath);
+
+            File[] files = virtualVisitRoot.listFiles();
+
+            //prepare AttendVisitResponse
+            AttendVisitResponse response = new AttendVisitResponse();
+            List<String> imagesUrls = new ArrayList<>();
+            String videoUrl = null;
+
+            if (virtualVisit.getYtLink() != null) {
+                response.setYtLink(virtualVisit.getYtLink());
+            }
+
+            String reqBegin = tourImageUrl + virtualVisit.getVirtualVisitId() + "/";
+            for (File f : files) {
+                if (!f.getName().endsWith(".mp4")) {
+                    imagesUrls.add(reqBegin + f.getName());
+                } else {
+                    videoUrl = tourVideoUrl + virtualVisit.getVirtualVisitId() + "/" + f.getName();
+                }
+            }
+
+            response.setImagesUrls(imagesUrls);
+            response.setVideoUrl(videoUrl);
+            //adding ending time
+            response.setEndingTimeInMillis(getEndingTime(virtualVisit));
+            return response;
+        }catch(InvalidTicketException e){
+            logService.insert(new LogEntity(0, "Attempt to attend virtual visit failed for user:"+ user.getUsername(), "ATTEND-FAIL", Instant.now()));
+            throw e;
+        }
+    }
+
+    @Override
+    public List<VirtualVisit> findAllUpcoming() {
         long millis=System.currentTimeMillis();
         Date date=new Date(millis);
         Time time=new Time(millis);
-        VirtualVisitEntity virtualVisit=repository.findActiveVisitById(request.getVirtualVisitId(), date, time).orElseThrow(InvalidTicketException::new);
 
-        //ticket is valid if no exception is thrown
-        //list all files from folder
-        String folderPath=rootFolder+virtualVisit.getFolder();
-        File virtualVisitRoot=new File(folderPath);
+        return repository.findAllUpcoming(date, time).stream().map(v->modelMapper.map(v, VirtualVisit.class)).collect(Collectors.toList());
+    }
 
-        File[] files=virtualVisitRoot.listFiles();
-
-        //prepare AttendVisitResponse
-        AttendVisitResponse response=new AttendVisitResponse();
-        List<String> imagesUrls=new ArrayList<>();
-        String videoUrl=null;
-
-        if(virtualVisit.getYtLink()!=null){
-            response.setYtLink(virtualVisit.getYtLink());
+    @Override
+    public void delete(Integer id) throws NotFoundException, IntegrityException {
+        if (!repository.existsById(id))
+            throw new NotFoundException();
+        try{
+            repository.deleteById(id);
+        }catch(Exception e){
+            throw new IntegrityException();
         }
-
-        String reqBegin=tourImageUrl+virtualVisit.getVirtualVisitId()+"/";
-        for(File f:files){
-            if(!f.getName().endsWith(".mp4")){
-                imagesUrls.add(reqBegin+f.getName());
-            }else{
-                videoUrl=tourVideoUrl+virtualVisit.getVirtualVisitId()+"/"+f.getName();
-            }
-        }
-
-        response.setImagesUrls(imagesUrls);
-        response.setVideoUrl(videoUrl);
-        //adding ending time
-        response.setEndingTimeInMillis(getEndingTime(virtualVisit));
-
-        return response;
     }
 
     private long getEndingTime(VirtualVisitEntity virtualVisit){

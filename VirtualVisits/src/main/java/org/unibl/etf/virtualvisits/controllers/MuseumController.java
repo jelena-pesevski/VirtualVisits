@@ -1,13 +1,15 @@
 package org.unibl.etf.virtualvisits.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
 import org.unibl.etf.virtualvisits.models.Museum;
-import org.unibl.etf.virtualvisits.models.SingleMuseum;
-import org.unibl.etf.virtualvisits.models.entities.MuseumEntity;
+import org.unibl.etf.virtualvisits.models.MuseumDetails;
+import org.unibl.etf.virtualvisits.models.requests.MuseumRequest;
 import org.unibl.etf.virtualvisits.services.MuseumService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,19 +27,27 @@ public class MuseumController {
         return service.findAll();
     }
 
+    @GetMapping("/detailed")
+    public List<MuseumDetails> findAllDetailed(){ return service.findAllDetailed();}
+
     @GetMapping("/{id}")
-    public SingleMuseum findById(@PathVariable Integer id) throws NotFoundException {
+    public MuseumDetails findById(@PathVariable Integer id) throws NotFoundException {
         return service.findById(id);
     }
 
-    @GetMapping("/searchName")
-    public List<Museum> findByName(@RequestParam String name) throws NotFoundException{
-        return service.findByName(name);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MuseumDetails insert(@RequestBody @Valid MuseumRequest museum){
+        return service.insert(museum);
     }
 
-    @GetMapping("/searchCity")
-    public List<Museum> findByCity(@RequestParam String city) throws NotFoundException{
-        return service.findByCity(city);
+    @PutMapping("/{id}")
+    public MuseumDetails update(@PathVariable Integer id, @RequestBody @Valid MuseumRequest museum) throws  NotFoundException{
+        return service.update(id, museum);
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) throws NotFoundException, IntegrityException {
+        service.delete(id);
+    }
 }

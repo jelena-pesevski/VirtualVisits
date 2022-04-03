@@ -1,6 +1,7 @@
 package org.unibl.etf.virtualvisits.services;
 
 import org.springframework.core.io.ByteArrayResource;
+import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
@@ -24,4 +25,8 @@ public interface VirtualVisitService {
      ByteArrayResource getVideo(Integer virtualVisitId, String fileName) throws NotFoundException;
 
      AttendVisitResponse attendVirtualVisit(AttendVisitRequest request) throws InvalidTicketException;
+
+    List<VirtualVisit> findAllUpcoming();
+
+    void delete(Integer id) throws NotFoundException, IntegrityException;
 }

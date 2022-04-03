@@ -1,14 +1,20 @@
 <div class="navigation" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between"> 
-    <div class="left-nav" fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutGap.xs="10px">
+    <div class="left-nav" fxLayout="row" fxLayout.xs="column">
         <a routerLink="/home" class="link" routerLinkActive="primary">News </a>
 
         <a routerLink="/home/museums" class="link" routerLinkActive="primary">Museums </a>
 
         <a routerLink="/home/virtual-visits" class="link" routerLinkActive="primary">Virtual visits </a>
+
+        <a *ngIf="isAdmin" routerLink="/home/museums/admin" class="link" routerLinkActive="primary">Museums Management</a>
+
+        <a *ngIf="isAdmin" routerLink="/home/virtual-visits/admin" class="link" routerLinkActive="primary">Visits Management</a>
+
+        <a *ngIf="isAdmin" routerLink="/home/logs" class="link" routerLinkActive="primary">Logs</a>
     </div>
    
-    <div class="right-nav" fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutGap.xs="10px">
-        <a id="admin-link" *ngIf="isAdmin" href="https://etf.unibl.org/">Admin app</a>
+    <div class="right-nav" fxLayout="row" fxLayout.xs="column">
+        <a id="admin-link" *ngIf="isAdmin" (click)="goToJSPApp()">User management app</a>
 
         <a (click)="logout()" class="link" routerLinkActive="primary">Logout </a>  
     </div>

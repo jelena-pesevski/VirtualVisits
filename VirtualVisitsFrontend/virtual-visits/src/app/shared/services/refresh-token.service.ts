@@ -9,8 +9,6 @@ import { TokenStorageService } from './token-storage.service';
 })
 export class RefreshTokenService {
 
-  private serverUrl:string=environment.BASE_URL+"refresh-token";
-
   constructor(private http:HttpClient) { }
 
   refreshToken(rfrshToken:string){
@@ -25,6 +23,6 @@ export class RefreshTokenService {
         })
       };
 
-     return this.http.post<any>(this.serverUrl, JSON.stringify(body), httpOptions);
+     return this.http.post<any>(`${environment.BASE_URL}/auth/refresh-token`, JSON.stringify(body), httpOptions);
   }
 }

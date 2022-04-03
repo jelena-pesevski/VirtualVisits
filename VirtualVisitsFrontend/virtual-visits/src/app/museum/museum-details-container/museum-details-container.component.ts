@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Museum } from 'src/app/model/museum.model';
-import { SingleMuseum } from 'src/app/model/single-museum.model';
+import { MuseumDetails } from 'src/app/model/single-museum.model';
 import { VirtualVisit } from 'src/app/model/virtual-visit.model';
 import { TicketService } from 'src/app/tickets/services/ticket.service';
 import { VirtualVisitService } from 'src/app/virtual-visit/services/virtual-visit.service';
@@ -16,7 +16,7 @@ import { MuseumService } from '../services/museum.service';
 })
 export class MuseumDetailsContainerComponent implements OnInit {
 
-  museum:SingleMuseum | null=null;
+  museum:MuseumDetails | null=null;
   displayedColumns: string[] = [ 'date', 'start', 'duration', 'price','action'];
   dataSource : VirtualVisit[] =[];
 
@@ -38,7 +38,7 @@ export class MuseumDetailsContainerComponent implements OnInit {
   showMuseumData(id:any){
     if(id==null)return;
 
-    this.museumService.getSingleMuseum(id).subscribe({
+    this.museumService.getMuseumDetails(id).subscribe({
       next:data=>{
         this.museum=data;
       },

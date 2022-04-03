@@ -12,7 +12,9 @@ import { MapContainerComponent } from './map-container/map-container.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MuseumsAdminComponent } from './museums-admin/museums-admin.component';
+import { MuseumEditComponent } from './museum-edit/museum-edit.component';
+import { GeolocationChooserComponent } from './geolocation-chooser/geolocation-chooser.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MuseumDetailsContainerComponent,
     WeatherForecastContainerComponent,
     MuseumListComponent,
-    MapContainerComponent
+    MapContainerComponent,
+    MuseumsAdminComponent,
+    MuseumEditComponent,
+    GeolocationChooserComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +35,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GoogleMapsModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
   ],
   exports: [
     MuseumContainerComponent,

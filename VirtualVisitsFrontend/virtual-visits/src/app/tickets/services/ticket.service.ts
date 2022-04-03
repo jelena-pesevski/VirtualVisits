@@ -10,7 +10,6 @@ import { environment } from 'src/environments/environment';
 })
 export class TicketService {
 
-  private getTicketServerUrl=environment.BASE_URL+"ticket";
   private virtualVisit:VirtualVisit | null=null;
 
   constructor(private http:HttpClient, private loginService:LoginService) { }
@@ -27,7 +26,7 @@ export class TicketService {
     };
     console.log(JSON.stringify(obj));
 
-    return this.http.post<any>(this.getTicketServerUrl, JSON.stringify(obj), httpOptions);
+    return this.http.post<any>(`${environment.BASE_URL}/ticket`, JSON.stringify(obj), httpOptions);
   }
 
   setVirtualVisit(visit:VirtualVisit){

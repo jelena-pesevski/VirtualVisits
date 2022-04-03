@@ -1,0 +1,21 @@
+<h1 *ngIf="!isEdit" mat-dialog-title>New virtual visit</h1>
+<h1 *ngIf="isEdit" mat-dialog-title>Update virtual visit</h1>
+<form [formGroup]="form">
+    <div mat-dialog-content class="visit-form">
+     
+        
+        <mat-form-field>
+            <mat-label>Museum</mat-label>
+            <mat-select formControlName="museumId" required>
+                <mat-option *ngFor="let museum of museums" [value]="museum.museumId">
+                    {{museum.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="close()">Cancel</button>
+        <button mat-button [disabled]="form.invalid" type="submit" (click)="save(form)">Save</button>
+    </div>
+</form>

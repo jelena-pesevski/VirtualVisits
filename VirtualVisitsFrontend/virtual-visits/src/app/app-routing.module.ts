@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuardService } from './auth/services/admin-guard.service';
 import { GuardService } from './auth/services/guard.service';
 
 const routes: Routes = [

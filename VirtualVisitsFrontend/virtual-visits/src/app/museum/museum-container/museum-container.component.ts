@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Museum } from 'src/app/model/museum.model';
-import { SingleMuseum } from 'src/app/model/single-museum.model';
+import { MuseumDetails } from 'src/app/model/single-museum.model';
 import { MuseumService } from '../services/museum.service';
 
 @Component({

@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
@@ -41,9 +42,15 @@ public class VirtualVisitController {
         return service.findAllActive();
     }
 
+
     @GetMapping("/upcoming/museum")
     public List<VirtualVisit> findAllUpcomingForMuseum(@RequestParam Integer id) {
         return service.findAllUpcomingByMuseumId(id);
+    }
+
+    @GetMapping("/upcoming")
+    public List<VirtualVisit> findAllUpcoming() {
+        return service.findAllUpcoming();
     }
 
     @PostMapping("/attend")
@@ -72,5 +79,11 @@ public class VirtualVisitController {
     public ResponseEntity<Resource> getVideo(@PathVariable Integer virtualVisitId, @PathVariable String fileName) throws NotFoundException{
         return ResponseEntity
                 .ok(service.getVideo(virtualVisitId, fileName));
+    }
+
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) throws NotFoundException, IntegrityException {
+        service.delete(id);
     }
 }
