@@ -12,4 +12,6 @@ public interface LogService {
     List<Log> findAll();
 
     byte[] getPdf();
+
+    List<Log> getByActionWithinLast24Hours(String action);
 }

@@ -1,11 +1,11 @@
 package org.unibl.etf.virtualvisits.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.virtualvisits.exceptions.BadRequest;
 import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
@@ -14,7 +14,9 @@ import org.unibl.etf.virtualvisits.models.requests.AttendVisitRequest;
 import org.unibl.etf.virtualvisits.models.responses.AttendVisitResponse;
 import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -85,5 +87,37 @@ public class VirtualVisitController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) throws NotFoundException, IntegrityException {
         service.delete(id);
+    }
+
+    @PostMapping()
+    public VirtualVisit insert(@RequestParam("virtualVisit") String virtualVisit, @RequestParam("image")MultipartFile[] images, @RequestParam(value = "video", required = false) MultipartFile video) throws BadRequest {
+       VirtualVisit visit=null;
+
+       //check if images size is too big
+    /*   if(images.length<5 || images.length>10){
+           throw new BadRequest();
+       }*/
+
+       try{
+          visit=service.insert(virtualVisit, images, video);
+       }catch(Exception e){
+           e.printStackTrace();
+           throw new BadRequest();
+
+       }
+       return visit;
+    }
+
+    @PutMapping("/{id}")
+    public VirtualVisit update(@PathVariable Integer id, @RequestParam("virtualVisit") String virtualVisit, @RequestParam(value = "image", required = false)MultipartFile[] images, @RequestParam(value = "video", required = false) MultipartFile video) throws BadRequest ,NotFoundException{
+        VirtualVisit visit=null;
+
+        //check if images size is too big
+    /*   if(images.length<5 || images.length>10){
+           throw new BadRequest();
+       }*/
+
+        visit=service.update(id, virtualVisit, images, video);
+        return visit;
     }
 }

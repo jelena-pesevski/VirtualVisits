@@ -11,4 +11,5 @@ public interface TicketEntityRepository extends JpaRepository<TicketEntity, Inte
 
     Optional<TicketEntity> findByVirtualVisitIdAndUserId(Integer virtualVisitId, Integer userId);
 
+    int countByVirtualVisitId(Integer visitId);
 }

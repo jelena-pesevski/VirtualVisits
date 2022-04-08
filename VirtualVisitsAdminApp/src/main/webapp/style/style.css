@@ -1,0 +1,32 @@
+
+.content{
+	height:100vh;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+tr,
+th,
+td {
+  border: 1px black solid;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+table{
+	margin: 10px;
+	border-collapse: collapse;
+	width: calc(100% - 20px);
+}
+
+.notification{
+	color: red;
+	font-weight: 500;
+	padding: 5px;
+}

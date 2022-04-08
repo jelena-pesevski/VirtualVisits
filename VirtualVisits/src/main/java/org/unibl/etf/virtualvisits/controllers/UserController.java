@@ -1,7 +1,9 @@
 package org.unibl.etf.virtualvisits.controllers;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.unibl.etf.virtualvisits.models.responses.StatisticsResponse;
 import org.unibl.etf.virtualvisits.services.UserService;
 
 @RestController
@@ -14,5 +16,8 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    @GetMapping("/statistics")
+    public StatisticsResponse getStatistics(){
+       return userService.getStatistics();
+    }
 }

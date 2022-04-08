@@ -15,10 +15,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
   ],
   imports: [
     BrowserModule,

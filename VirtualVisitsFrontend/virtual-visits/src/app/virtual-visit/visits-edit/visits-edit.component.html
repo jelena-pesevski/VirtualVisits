@@ -1,5 +1,6 @@
 <h1 *ngIf="!isEdit" mat-dialog-title>New virtual visit</h1>
 <h1 *ngIf="isEdit" mat-dialog-title>Update virtual visit</h1>
+<h5 mat-dialog-title>Paste yt link or upload video, you can't do both</h5>
 <form [formGroup]="form">
     <div mat-dialog-content class="visit-form">
      
@@ -13,6 +14,43 @@
             </mat-select>
         </mat-form-field>
 
+        <div class="row">
+            <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Start" required formControlName="start" autocomplete="off" />
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput placeholder="Duration" required formControlName="duration" autocomplete="off" />
+            </mat-form-field>
+
+        </div>
+
+        <mat-form-field>
+            <input matInput placeholder="Price" required formControlName="price" autocomplete="off" />
+        </mat-form-field>
+
+        
+        <mat-form-field>
+            <input matInput placeholder="YouTube link" formControlName="ytLink" autocomplete="off" />
+        </mat-form-field>
+
+        <div class="file-input">
+            <label for="imagesInput">Images </label>
+            <input  placeholder="Images" type="file" #imagesInput accept="image/*" multiple (change)="onImagesUpload($event)"/>
+        </div>
+       
+
+        <div class="file-input">
+            <label for="imagesInput">Video </label>
+            <input  placeholder="Video" type="file" #videoInput accept="video/*" (change)="onVideoUpload($event)"/>
+        </div>
+   
     </div>
     <div mat-dialog-actions>
         <button mat-button (click)="close()">Cancel</button>

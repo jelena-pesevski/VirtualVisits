@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { VirtualVisit } from 'src/app/model/virtual-visit.model';
+import { TicketService } from 'src/app/tickets/services/ticket.service';
 import { VirtualVisitService } from '../services/virtual-visit.service';
 import { VisitEntryComponent } from '../visit-entry/visit-entry.component';
 
@@ -12,19 +13,36 @@ import { VisitEntryComponent } from '../visit-entry/visit-entry.component';
 })
 export class ActiveVisitsContainerComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'museumName', 'date', 'start', 'duration','action'];
-  dataSource : VirtualVisit[] =[];
+  displayedColumnsActiveVisits: string[] = [ 'museumName', 'date', 'start', 'duration','action'];
+  displayedColumnsUpcomingVisits: string[] = [ 'museumName', 'date', 'start', 'duration','action'];
+  activeVisits : VirtualVisit[] =[];
+  upcomingVisits: VirtualVisit[]=[];
 
-  constructor(private visitsService:VirtualVisitService, private router:Router, private dialog: MatDialog) { }
+  constructor(private visitsService:VirtualVisitService, private router:Router, private dialog: MatDialog, private ticketService:TicketService) { }
 
   ngOnInit(): void {
-    this.loadVisits();
+    this.loadActiveVisits();
+    this.loadUpcomingVisits();
   }
 
-  loadVisits(){
+  loadActiveVisits(){
     this.visitsService.getActiveVisits().subscribe({
       next:data=>{
-        this.dataSource=data;
+        this.activeVisits=data;
+      },
+      error: err => {
+        console.log(err);
+        if(err.status==401){
+          this.router.navigate(['']);
+        }
+      }
+    });
+  }
+
+  loadUpcomingVisits(){
+    this.visitsService.getUpcoming().subscribe({
+      next:data=>{
+        this.upcomingVisits=data;
       },
       error: err => {
         console.log(err);
@@ -42,5 +60,10 @@ export class ActiveVisitsContainerComponent implements OnInit {
         virtualVisitId:element.virtualVisitId
       }
     });
+  }
+
+  buyTicket(element:VirtualVisit){
+    this.ticketService.setVirtualVisit(element);
+    this.router.navigate(['/buy-ticket']);
   }
 }

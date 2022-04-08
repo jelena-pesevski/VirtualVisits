@@ -11,4 +11,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Integer>
    Optional<UserEntity> findByUsernameAndStatus(String username, UserStatus status);
 
    Boolean existsByUsername(String username);
+
+   int countByIsLoggedInEquals(boolean isLoggedIn);
+
+   int countByStatusEquals(UserStatus status);
 }

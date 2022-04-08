@@ -1,6 +1,9 @@
 package org.unibl.etf.virtualvisits.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.virtualvisits.exceptions.BadRequest;
 import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
@@ -29,4 +32,8 @@ public interface VirtualVisitService {
     List<VirtualVisit> findAllUpcoming();
 
     void delete(Integer id) throws NotFoundException, IntegrityException;
+
+    VirtualVisit insert(String virtualVisit, MultipartFile[] images, MultipartFile video) throws JsonProcessingException;
+
+    VirtualVisit update(Integer id, String virtualVisit, MultipartFile[] images, MultipartFile video) throws BadRequest, NotFoundException;
 }

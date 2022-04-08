@@ -24,13 +24,14 @@ export class ActiveVisitContainerComponent implements OnInit {
         this.ytLink=this.sanitizer.bypassSecurityTrustResourceUrl(visitContent.ytLink);
       }
       
-
       var delay=visitContent.endingTimeInMillis- Date.now();
 
       setTimeout(function(){
         loginService.logout();
         router.navigate(['']);
       }, delay);
+    }else{
+      this.router.navigate(['home/virtual-visits']);
     }
   }
 

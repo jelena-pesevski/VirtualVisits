@@ -1,10 +1,14 @@
 package org.unibl.etf.virtualvisits.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.unibl.etf.virtualvisits.exceptions.BadRequest;
 import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.InvalidTicketException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
@@ -22,7 +26,11 @@ import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.*;
@@ -42,6 +50,8 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
 
     private final LogService logService;
 
+    private final ObjectMapper objectMapper;
+
     @Value("${visits.root.folder}")
     private String rootFolder;
 
@@ -51,11 +61,15 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
     @Value("${tour-video.url}")
     private String tourVideoUrl;
 
-    public VirtualVisitServiceImpl(VirtualVisitEntityRepository repository, ModelMapper modelMapper, TicketEntityRepository ticketEntityRepository, LogService logService) {
+    @Value("${visits.root.folder}")
+    private String visitsRootFolder;
+
+    public VirtualVisitServiceImpl(VirtualVisitEntityRepository repository, ModelMapper modelMapper, TicketEntityRepository ticketEntityRepository, LogService logService, ObjectMapper objectMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
         this.ticketEntityRepository = ticketEntityRepository;
         this.logService = logService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -199,9 +213,156 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
             throw new NotFoundException();
         try{
             repository.deleteById(id);
+
+            //delete folder
+            File folder=new File(visitsRootFolder+id);
+            for(File f:folder.listFiles()){
+                f.delete();
+            }
+            folder.delete();
+
+            JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            logService.insert(new LogEntity(0, user.getUsername()+" deleted visit with id "+id, "VISIT-DELETE", Instant.now()));
         }catch(Exception e){
             throw new IntegrityException();
         }
+    }
+
+    @Override
+    public VirtualVisit insert(String virtualVisit, MultipartFile[] images, MultipartFile video) throws JsonProcessingException {
+        VirtualVisit visit=objectMapper.readValue(virtualVisit, VirtualVisit.class);
+        //map to entity
+        VirtualVisitEntity entity=modelMapper.map(visit, VirtualVisitEntity.class);
+        entity.setVirtualVisitId(null);
+        entity.setFolder("");
+        entity=repository.save(entity);
+
+        String folderName=entity.getVirtualVisitId().toString();
+        entity.setFolder(folderName);
+        repository.save(entity);
+
+        File folderForVV=new File(visitsRootFolder+folderName);
+        folderForVV.mkdir();
+
+        //save images
+        for(MultipartFile image : images){
+            Path destinationFile = folderForVV.toPath().resolve(
+                            Paths.get(image.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+
+            try{
+                InputStream inputStream = image.getInputStream();
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        //save video if no yt link is sent
+        if(video!=null && !video.isEmpty() && visit.getYtLink()==null){
+            Path destinationFile = folderForVV.toPath().resolve(
+                            Paths.get(video.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            try{
+                InputStream inputStream = video.getInputStream();
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logService.insert(new LogEntity(0, user.getUsername()+" added visit with id "+entity.getVirtualVisitId(), "VISIT-ADD", Instant.now()));
+        return modelMapper.map(entity, VirtualVisit.class);
+    }
+
+    @Override
+    public VirtualVisit update(Integer id, String virtualVisit, MultipartFile[] images, MultipartFile video) throws BadRequest,NotFoundException {
+        VirtualVisit visit=null;
+
+        if(!repository.existsById(id)){
+            throw new NotFoundException();
+        }
+        try{
+            visit=objectMapper.readValue(virtualVisit, VirtualVisit.class);
+        }catch(Exception e){
+            throw new BadRequest();
+        }
+
+        //check if no ticket is bought
+        int numOfTickets=ticketEntityRepository.countByVirtualVisitId(id);
+        if(numOfTickets!=0){
+            System.out.println("ima karata");
+            throw new NotFoundException();
+        }
+
+        //map to entity
+        VirtualVisitEntity entity=modelMapper.map(visit, VirtualVisitEntity.class);
+        entity.setVirtualVisitId(id);
+        entity.setFolder(id.toString());
+        repository.save(entity);
+
+        File folderForVV=new File(visitsRootFolder+id);
+
+        //updateImages
+        if(images!=null){
+            //delete prev images
+            for(File f:folderForVV.listFiles()){
+                if(!f.getName().endsWith(".mp4")){
+                    f.delete();
+                }
+            }
+
+
+            for(MultipartFile image : images){
+                Path destinationFile = folderForVV.toPath().resolve(
+                                Paths.get(image.getOriginalFilename()))
+                        .normalize().toAbsolutePath();
+
+                try{
+                    InputStream inputStream = image.getInputStream();
+                    Files.copy(inputStream, destinationFile,
+                            StandardCopyOption.REPLACE_EXISTING);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        //if yt link is sent, delete video from last update
+        if(visit.getYtLink()!=null){
+            for(File f:folderForVV.listFiles()){
+                if(f.getName().endsWith(".mp4")){
+                    f.delete();
+                }
+            }
+        }
+
+        //save video if no yt link is sent
+        if(video!=null && !video.isEmpty() && visit.getYtLink()==null){
+            //delete prev video if exists
+            for(File f:folderForVV.listFiles()){
+                if(f.getName().endsWith(".mp4")){
+                    f.delete();
+                }
+            }
+
+            Path destinationFile = folderForVV.toPath().resolve(
+                            Paths.get(video.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            try{
+                InputStream inputStream = video.getInputStream();
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logService.insert(new LogEntity(0, user.getUsername()+" updated visit with id "+entity.getVirtualVisitId(), "VISIT-UPDATE", Instant.now()));
+        return modelMapper.map(entity, VirtualVisit.class);
     }
 
     private long getEndingTime(VirtualVisitEntity virtualVisit){

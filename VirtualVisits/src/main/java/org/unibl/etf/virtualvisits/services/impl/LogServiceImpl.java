@@ -51,6 +51,11 @@ public class LogServiceImpl implements LogService {
         return bytes;
     }
 
+    @Override
+    public List<Log> getByActionWithinLast24Hours(String action) {
+        return logEntityRepository.findAllByActionWithinLast24Hours(action).stream().map(m->modelMapper.map(m, Log.class)).collect(Collectors.toList());
+    }
+
     private void writePdf(ByteArrayOutputStream outputStream, List<Log> logs){
         SimpleDateFormat sdf=new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         Document document = new Document();

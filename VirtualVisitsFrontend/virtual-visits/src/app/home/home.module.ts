@@ -11,13 +11,15 @@ import { VirtualVisitModule } from '../virtual-visit/virtual-visit.module';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RssFeedComponent } from './rss-feed/rss-feed.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     NavBarComponent,
-    RssFeedComponent
+    RssFeedComponent,
+    StatisticsComponent
   ],
   imports: [
     CommonModule,

@@ -49,8 +49,15 @@ export class VirtualVisitService {
     this.currAttendingVisit=visit;
   }
 
-  deleteMuseum(visitId:number) : Observable<any>{
+  deleteVirtualVisit(visitId:number) : Observable<any>{
     return this.http.delete<any>(`${environment.BASE_URL}/virtual-visits/${visitId}`);
   }
 
+  insertVirtualVisit(formData:FormData):Observable<VirtualVisit>{
+    return this.http.post<VirtualVisit>(`${environment.BASE_URL}/virtual-visits`, formData);
+  }
+
+  updateVirtualVisit(id:any, formData:FormData):Observable<VirtualVisit>{
+    return this.http.put<VirtualVisit>(`${environment.BASE_URL}/virtual-visits/${id}`, formData);
+  }
 }

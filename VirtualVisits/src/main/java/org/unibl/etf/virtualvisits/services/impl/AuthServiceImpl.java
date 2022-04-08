@@ -107,6 +107,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean logout(Integer userId) throws NotFoundException {
         User userObject= userService.findById(userId);
         userObject.setIsLoggedIn(false);
+        userObject.setOtpToken(null);
         userService.update(userObject.getUserId(), userObject);
         logService.insert(new LogEntity(0,  userObject.getUsername()+ " logged out.", "LOGOUT", Instant.now()));
 

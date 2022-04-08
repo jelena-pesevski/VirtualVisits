@@ -28,6 +28,6 @@ export class NavBarComponent implements OnInit {
   }
 
   goToJSPApp(){
-    window.open(`http:localhost:8080/VirtualVisitsAdminApp/home.jsp?otp=${this.loginService.getOtp()}`, "_blank");
+    window.open(`http://localhost:8080/VirtualVisitsAdminApp/home.jsp?otp=${this.loginService.getOtp()}`, "_blank");
   }
 }

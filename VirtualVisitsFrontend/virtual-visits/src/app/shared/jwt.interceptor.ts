@@ -29,6 +29,7 @@ export class JwtInterceptor implements HttpInterceptor{
         }
         return next.handle(authReq).pipe(catchError((error:any)=>{
             if (error instanceof HttpErrorResponse && error.status === 403 && !authReq.url.includes('/login') && !authReq.url.includes("/refresh-token")  && !authReq.url.includes("/sign-up") && !authReq.url.includes("/logout")) {
+                console.log("jwt expired");
                 return this.handle403Error(authReq, next);
             }
             return throwError(() => error);

@@ -73,9 +73,18 @@ export class MuseumEditComponent implements OnInit {
         this.museumService.updateMuseum(value).subscribe({
           next:data=>{
             console.log("updated");
+            this.snackBar.open("Museum is saved", undefined, {
+              duration: 2000,
+            });
+                  
+            this.form.reset(); 
+            this.dialogRef.close();
           },
           error:err=>{
             console.log(err);
+            this.snackBar.open("Museum can't be saved", undefined, {
+              duration: 2000,
+            });
             if(err.status==401){
               this.router.navigate(['']);
             }
@@ -85,22 +94,24 @@ export class MuseumEditComponent implements OnInit {
         this.museumService.insertMuseum(value).subscribe({
           next:data=>{
             console.log("inserted");
+            this.snackBar.open("Museum is saved", undefined, {
+              duration: 2000,
+            });
+            
+            this.form.reset(); 
+            this.dialogRef.close();
           },
           error:err=>{
             console.log(err);
+            this.snackBar.open("Museum can't be saved", undefined, {
+              duration: 2000,
+            });
             if(err.status==401){
               this.router.navigate(['']);
             }
           }
         })
       }
-
-      
-      this.form.reset(); //ponistimo prethodno unesene podatke
-      this.snackBar.open("Museum is saved", undefined, { //i prikazemo poruku koja nestaje nakon 2s
-        duration: 2000,
-      });
-      this.close();
     }
   }
 

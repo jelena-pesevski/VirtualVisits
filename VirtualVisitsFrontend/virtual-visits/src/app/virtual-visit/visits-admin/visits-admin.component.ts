@@ -28,6 +28,10 @@ export class VisitsAdminComponent implements OnInit {
   loadData(){
     this.visitsService.getUpcoming().subscribe({
       next: data => {
+        data.forEach((v: any) => {
+          v.museumId=parseInt(v.museumId);
+          v.date = new Date(v.date);
+        });
         this.dataSource=new MatTableDataSource(data);
       },
       error: err => {
@@ -46,7 +50,7 @@ export class VisitsAdminComponent implements OnInit {
     .afterClosed()
     .subscribe(result => {
       if (result && element.virtualVisitId) {
-        this.visitsService.deleteMuseum(element.virtualVisitId).subscribe({
+        this.visitsService.deleteVirtualVisit(element.virtualVisitId).subscribe({
           next:data=>{
             this.snackBar.open("Virtual visit is deleted!", undefined, {
               duration: 2000
@@ -83,6 +87,15 @@ export class VisitsAdminComponent implements OnInit {
   }
 
   add(){
-
+    this.dialog.open(VisitsEditComponent, {
+      width: '600px',
+      data: {
+        isEdit: false
+      }
+    })
+    .afterClosed()
+    .subscribe(result => {
+      this.loadData();
+    });
   }
 }

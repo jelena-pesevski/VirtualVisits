@@ -1,17 +1,22 @@
 package org.unibl.etf.virtualvisits.services.impl;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.unibl.etf.virtualvisits.exceptions.IntegrityException;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
+import org.unibl.etf.virtualvisits.models.JwtUser;
 import org.unibl.etf.virtualvisits.models.Museum;
 import org.unibl.etf.virtualvisits.models.MuseumDetails;
+import org.unibl.etf.virtualvisits.models.User;
+import org.unibl.etf.virtualvisits.models.entities.LogEntity;
 import org.unibl.etf.virtualvisits.models.entities.MuseumEntity;
 import org.unibl.etf.virtualvisits.models.requests.MuseumRequest;
 import org.unibl.etf.virtualvisits.repositories.MuseumEntityRepository;
+import org.unibl.etf.virtualvisits.services.LogService;
 import org.unibl.etf.virtualvisits.services.MuseumService;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +27,12 @@ public class MuseumServiceImpl implements MuseumService {
 
     private final MuseumEntityRepository museumEntityRepository;
 
-    public MuseumServiceImpl(MuseumEntityRepository repository, ModelMapper modelMapper) {
+    private final LogService logService;
+
+    public MuseumServiceImpl(MuseumEntityRepository repository, ModelMapper modelMapper, LogService logService) {
         this.museumEntityRepository = repository;
         this.modelMapper = modelMapper;
+        this.logService = logService;
     }
 
     @Override
@@ -57,6 +65,10 @@ public class MuseumServiceImpl implements MuseumService {
         MuseumEntity museumEntity=modelMapper.map(museumRequest, MuseumEntity.class);
         museumEntity.setMuseumId(null);
         museumEntity=museumEntityRepository.save(museumEntity);
+
+        JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logService.insert(new LogEntity(0, user.getUsername()+" added new museum with id "+museumEntity.getMuseumId(), "MUSEUM-ADD", Instant.now()));
+
         return modelMapper.map(museumEntity, MuseumDetails.class);
     }
 
@@ -67,6 +79,9 @@ public class MuseumServiceImpl implements MuseumService {
         MuseumEntity museumEntity=modelMapper.map(museumRequest, MuseumEntity.class);
         museumEntity.setMuseumId(id);
         museumEntity=museumEntityRepository.save(museumEntity);
+
+        JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logService.insert(new LogEntity(0, user.getUsername()+" updated museum with id "+museumEntity.getMuseumId(), "MUSEUM-UPDATE", Instant.now()));
         return modelMapper.map(museumEntity, MuseumDetails.class);
     }
 
@@ -76,6 +91,9 @@ public class MuseumServiceImpl implements MuseumService {
             throw new NotFoundException();
         try{
             museumEntityRepository.deleteById(id);
+
+            JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            logService.insert(new LogEntity(0, user.getUsername()+" deleted museum with id "+id ,"MUSEUM-DELETE", Instant.now()));
         }catch(Exception e){
             throw new IntegrityException();
         }

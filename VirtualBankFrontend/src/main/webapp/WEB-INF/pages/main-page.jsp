@@ -1,10 +1,10 @@
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="org.unibl.etf.virtual_bank.models.dto.Transaction"%>
+<%@page import="org.unibl.etf.virtualbank.models.dto.Transaction"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<jsp:useBean id="accountBean" type="org.unibl.etf.virtual_bank.models.beans.AccountBean" scope="session"/>
-<jsp:useBean id="transactionBean" type="org.unibl.etf.virtual_bank.models.beans.TransactionBean" scope="session"/>
+<jsp:useBean id="accountBean" type="org.unibl.etf.virtualbank.models.beans.AccountBean" scope="session"/>
+<jsp:useBean id="transactionBean" type="org.unibl.etf.virtualbank.models.beans.TransactionBean" scope="session"/>
 <!DOCTYPE html>
 <html>
 <head>

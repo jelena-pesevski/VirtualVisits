@@ -6,6 +6,7 @@ import { AdminGuardService } from '../auth/services/admin-guard.service';
 import { MuseumDetailsContainerComponent } from '../museum/museum-details-container/museum-details-container.component';
 import { HomeComponent } from './home/home.component';
 import { RssFeedComponent } from './rss-feed/rss-feed.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,11 @@ const routes: Routes = [
       {
         path:'',
         component:RssFeedComponent
+      },
+      {
+        path:'statistics',
+        component:StatisticsComponent,
+        canActivate:[AdminGuardService]
       },
       {
         path:'museums',

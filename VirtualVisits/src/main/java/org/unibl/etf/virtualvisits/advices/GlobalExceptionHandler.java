@@ -62,4 +62,9 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(BadRequest.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleBadRequestException(){
+
+    }
 }
