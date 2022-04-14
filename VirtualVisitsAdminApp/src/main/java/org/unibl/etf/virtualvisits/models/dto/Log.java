@@ -9,16 +9,18 @@ public class Log {
 	private String info;
 	private String action;
 	private Instant dateTime;
+	private String username;
 	public Log() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Log(Integer logId, String info, String action, Instant dateTime) {
+	public Log(Integer logId, String info, String action, Instant dateTime, String username) {
 		super();
 		this.logId = logId;
 		this.info = info;
 		this.action = action;
 		this.dateTime = dateTime;
+		this.username=username;
 	}
 	public Integer getLogId() {
 		return logId;
@@ -43,6 +45,12 @@ public class Log {
 	}
 	public void setDateTime(Instant dateTime) {
 		this.dateTime = dateTime;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	

@@ -9,6 +9,7 @@ import org.unibl.etf.virtualvisits.models.dao.UserDAO;
 import org.unibl.etf.virtualvisits.models.dto.Log;
 import org.unibl.etf.virtualvisits.models.dto.User;
 import org.unibl.etf.virtualvisits.models.enums.UserStatus;
+import org.unibl.etf.virtualvisits.utils.MailSender;
 
 public class UsersManagerBean implements Serializable {
 
@@ -54,8 +55,13 @@ public class UsersManagerBean implements Serializable {
 		String password=generateRandomPassword();
 	
 		if(password.matches(passwordRegex)) {
-			return UserDAO.updatePassword(userId, password);
-			//send on mail
+			boolean result= UserDAO.updatePassword(userId, password);
+			
+			//send mail
+			if(result) {
+				MailSender.sendNewPassword(userId, password);
+			}
+			return result;
 		}
 		return false;
 	}
@@ -66,15 +72,15 @@ public class UsersManagerBean implements Serializable {
 		StringBuilder newPassword=new StringBuilder();
 		
 		for(int i=0; i<5; i++) {
-			newPassword.append(String.valueOf((char) (rand.nextInt(27) + 'A')));
+			newPassword.append(String.valueOf((char) (rand.nextInt(26) + 'A')));
 		}
 		
 		for(int i=0; i<7; i++) {
-			newPassword.append(String.valueOf((char) (rand.nextInt(27) + 'a')));
+			newPassword.append(String.valueOf((char) (rand.nextInt(26) + 'a')));
 		}
 		
 		for(int i=0; i<3; i++) {
-			newPassword.append(String.valueOf((char) (rand.nextInt(10) + '0')));
+			newPassword.append(String.valueOf((char) (rand.nextInt(9) + '0')));
 		}
 		
 		System.out.println("Generated password:"+newPassword.toString());

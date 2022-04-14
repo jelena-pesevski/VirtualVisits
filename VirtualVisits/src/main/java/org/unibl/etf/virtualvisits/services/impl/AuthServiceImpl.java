@@ -76,9 +76,9 @@ public class AuthServiceImpl implements AuthService {
             response.setToken(generateJwt(user));
             response.setRefreshToken(generateRefreshToken(user));
 
-            logService.insert(new LogEntity(0,  user.getUsername()+ " logged in.", "LOGIN", Instant.now()));
+            logService.insert(new LogEntity(0,  user.getUsername()+ " logged in.", "LOGIN", Instant.now(), user.getUsername()));
         }catch(Exception e){
-            logService.insert(new LogEntity(0, "Unsuccessful login with username "+ request.getUsername() +" and password "+ request.getPassword(), "LOGIN-TRY", Instant.now()));
+            logService.insert(new LogEntity(0, "Unsuccessful login with username "+ request.getUsername() +" and password "+ request.getPassword(), "LOGIN-TRY", Instant.now(), null));
             throw new UnauthorizedException();
         }
         return response;
@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
             refreshTokenResponse=new RefreshTokenResponse();
             refreshTokenResponse.setToken(generateJwt(user));
 
-            logService.insert(new LogEntity(0,  user.getUsername()+ " refreshed JWT.", "REFRESH-TOKEN", Instant.now()));
+            logService.insert(new LogEntity(0,  user.getUsername()+ " refreshed JWT.", "REFRESH-TOKEN", Instant.now(), user.getUsername()));
         }catch(Exception e){
             throw new UnauthorizedException();
         }
@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
         userObject.setIsLoggedIn(false);
         userObject.setOtpToken(null);
         userService.update(userObject.getUserId(), userObject);
-        logService.insert(new LogEntity(0,  userObject.getUsername()+ " logged out.", "LOGOUT", Instant.now()));
+        logService.insert(new LogEntity(0,  userObject.getUsername()+ " logged out.", "LOGOUT", Instant.now(), userObject.getUsername()));
 
         return true;
     }

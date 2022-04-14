@@ -52,8 +52,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Log> getByActionWithinLast24Hours(String action) {
-        return logEntityRepository.findAllByActionWithinLast24Hours(action).stream().map(m->modelMapper.map(m, Log.class)).collect(Collectors.toList());
+    public List<LogEntityRepository.HourNumOfUsersPair> getByActionWithinLast24Hours(String action) {
+        return logEntityRepository.findAllByActionWithinLast24Hours(action);
     }
 
     private void writePdf(ByteArrayOutputStream outputStream, List<Log> logs){

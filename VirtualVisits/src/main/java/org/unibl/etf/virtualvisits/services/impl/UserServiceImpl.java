@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void singUp(SignUpRequest request) throws ConflictException {
         if(repository.existsByUsername(request.getUsername())){
-            logService.insert(new LogEntity(0, "Sign up conflict for username:"+request.getUsername()  , "SIGN-UP-TRY", Instant.now()));
+            logService.insert(new LogEntity(0, "Sign up conflict for username:"+request.getUsername()  , "SIGN-UP-TRY", Instant.now(), null));
             throw new ConflictException();
         }
         UserEntity entity=modelMapper.map(request, UserEntity.class);
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         entity.setUserId(null);
         repository.save(entity);
 
-        logService.insert(new LogEntity(0,  "Sign up request for username: "+ request.getUsername(), "SIGN-UP", Instant.now()));
+        logService.insert(new LogEntity(0,  "Sign up request for username: "+ request.getUsername(), "SIGN-UP", Instant.now(), null));
     }
 
     @Override
@@ -80,24 +80,14 @@ public class UserServiceImpl implements UserService {
         response.setNumOfLoggedIn(repository.countByIsLoggedInEquals(true));
         response.setNumOfRegistrated(repository.countByStatusEquals(UserStatus.ACTIVE));
 
-        List<Log> logs=logService.getByActionWithinLast24Hours("LOGIN");
-        List<HourNumOfUsersPair> pairs=new ArrayList<>();
-
         int currHour=Instant.now().atZone(ZoneId.systemDefault()).getHour();
-        //group logs by hour of the day
-        Map<Integer, Long> activeUsersByHour= logs.stream().collect(Collectors.groupingBy(l-> {
-           int hour= l.getDateTime().atZone(ZoneId.systemDefault()).getHour();
-           if (hour> currHour) {
-               return hour-24;
-           }else {
-               return hour;
-           }
-         }
-        , Collectors.counting()));
-
-        for(Integer key:activeUsersByHour.keySet()){
-            pairs.add(new HourNumOfUsersPair(key, activeUsersByHour.get(key)));
-        }
+        List<HourNumOfUsersPair> pairs=logService.getByActionWithinLast24Hours("LOGIN").stream().map(p->{
+            if (p.getHour()> currHour) {
+               return new HourNumOfUsersPair(p.getHour()-24, p.getNumOfUsers());
+            }else{
+                return  modelMapper.map(p, HourNumOfUsersPair.class);
+            }
+        }).collect(Collectors.toList());
 
         //sort from last day hour to now
         Collections.sort(pairs, new Comparator<HourNumOfUsersPair>() {
@@ -107,8 +97,6 @@ public class UserServiceImpl implements UserService {
         });
 
         response.setPairs(pairs);
-      //  for(String key:)
-
         return response;
     }
 }

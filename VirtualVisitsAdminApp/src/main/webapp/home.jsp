@@ -11,7 +11,7 @@
 	if(token!=null && userBean.loginWithToken(token)){
 		response.sendRedirect("users.jsp");
 	}else if(token!=null){
-		logBean.insertLog(new Log(0, "Bad login with token:"+ token, "LOGIN ADMIN APP FAIL", Instant.now()));
+		logBean.insertLog(new Log(0, "Bad login with token:"+ token, "LOGIN ADMIN APP FAIL", Instant.now(),null));
 		response.sendRedirect("error.jsp");
 	}else{
 		response.sendRedirect("login.jsp");

@@ -14,6 +14,7 @@ import org.unibl.etf.virtualvisits.models.User;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
 import org.unibl.etf.virtualvisits.models.entities.TicketEntity;
 import org.unibl.etf.virtualvisits.services.MailService;
+import org.unibl.etf.virtualvisits.services.UserService;
 import org.unibl.etf.virtualvisits.services.VirtualVisitService;
 
 import javax.activation.DataSource;
@@ -31,6 +32,8 @@ public class MailServiceImpl implements MailService {
 
     private final VirtualVisitService virtualVisitService;
 
+    private final UserService userService;
+
     @Value("${spring.mail.username}")
     private String username;
 
@@ -46,20 +49,27 @@ public class MailServiceImpl implements MailService {
     @Value("${mail.notif.subject}")
     private String notifSubject;
 
-    public MailServiceImpl(JavaMailSender mailSender, ModelMapper modelMapper, VirtualVisitService virtualVisitService) {
+    public MailServiceImpl(JavaMailSender mailSender, ModelMapper modelMapper, VirtualVisitService virtualVisitService, UserService userService) {
         this.mailSender = mailSender;
         this.modelMapper = modelMapper;
         this.virtualVisitService = virtualVisitService;
+        this.userService = userService;
     }
 
     @Override
-    public void sendNotificationMail(String recipient, String content) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(username);
-        message.setTo(recipient);
-        message.setSubject(notifSubject);
-        message.setText(content);
-        mailSender.send(message);
+    public void sendNotificationMail(Integer recipientId, String content) {
+        try{
+            User recipient=userService.findById(recipientId);
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(username);
+            message.setTo(recipient.getMail());
+            message.setSubject(notifSubject);
+            message.setText(content);
+            mailSender.send(message);
+        }catch(Exception e) {
+            System.out.println("Notification mail not sent");
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ import org.unibl.etf.virtualvisits.utils.DAOUtil;
 public class LogDAO {
 
 	private static ConnectionPool pool=ConnectionPool.getInstance();
-	private static final String INSERT="INSERT INTO log (info, action, date_time) VALUES (?, ?, ?)";
+	private static final String INSERT="INSERT INTO log (info, action, date_time, username) VALUES (?, ?, ?, ?)";
 	
 	
 	public static boolean insert(Log log) {
@@ -30,7 +30,7 @@ public class LogDAO {
 		 Timestamp timestamp = Timestamp.valueOf(ldt);
 		    
 		
-		Object[] values= {log.getInfo(), log.getAction(), timestamp};
+		Object[] values= {log.getInfo(), log.getAction(), timestamp, log.getUsername()};
 		
 		try {
 			conn=pool.checkOut();

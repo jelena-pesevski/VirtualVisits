@@ -16,13 +16,10 @@ public class LogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "log_id", nullable = false)
     private Integer logId;
-    @Basic
-    @Column(name = "info", nullable = false, length = 90)
     private String info;
-    @Basic
-    @Column(name = "action", nullable = false, length = 45)
     private String action;
     @Basic
     @Column(name = "date_time", nullable = false)
     private Instant dateTime;
+    private String username;
 }

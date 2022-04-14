@@ -43,7 +43,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'test','test','0123456789',0,475.00,'0000','2024-01-01',1);
+INSERT INTO `account` VALUES (1,'test','test','0123456789',0,385.00,'0000','2024-01-01',1);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +62,7 @@ CREATE TABLE `transaction` (
   PRIMARY KEY (`transaction_id`),
   KEY `fk_transaction_account_idx` (`account_id`),
   CONSTRAINT `fk_transaction_account` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,6 +71,7 @@ CREATE TABLE `transaction` (
 
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+INSERT INTO `transaction` VALUES (1,'2022-03-13 19:43:51',50.00,1),(2,'2022-03-13 21:59:26',5.00,1),(3,'2022-03-13 22:13:46',50.00,1),(4,'2022-03-13 22:17:56',50.00,1),(5,'2022-03-13 22:19:57',50.00,1),(6,'2022-03-14 13:45:20',5.00,1),(7,'2022-03-14 13:55:29',10.00,1),(8,'2022-03-14 14:09:27',50.00,1),(9,'2022-03-14 14:10:23',50.00,1),(10,'2022-03-17 19:33:06',25.00,1),(11,'2022-03-20 00:35:21',25.00,1),(12,'2022-03-25 10:23:59',25.00,1),(13,'2022-04-08 12:41:59',25.00,1),(14,'2022-04-09 16:14:25',15.00,1),(15,'2022-04-14 11:31:32',25.00,1);
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +84,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-20  1:08:55
+-- Dump completed on 2022-04-14 12:28:53

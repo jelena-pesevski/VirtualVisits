@@ -18,11 +18,11 @@ public class UserDAO {
 
 	private static final ConnectionPool pool=ConnectionPool.getInstance();
 	private static final String SELECT_ALL="SELECT * FROM user";
-	private static final String INSERT="INSERT INTO user (firstname, lastname, username, password, mail, role, status, otp_token, is_logged_in) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? )";
+	private static final String INSERT="INSERT INTO user (firstname, lastname, username, password, mail, role, status) VALUES (?, ?, ?, ?, ?, ?, ? )";
 	private static final String GET_USER_BY_OTP_TOKEN="SELECT * FROM user WHERE otp_token=? and role=? and status=? ";
 	private static final String GET_BY_ID="SELECT * FROM user WHERE user_id=? ";
 	private static final String GET_BY_USERNAME_AND_PASSWORD="SELECT * FROM user WHERE username=? and password=? and role=? and status=? ";
-	private static final String UPDATE="UPDATE user SET firstname=?, lastname=?, username=?, password=?, mail=?, role=?, status=? WHERE user_id=?";
+	private static final String UPDATE="UPDATE user SET firstname=?, lastname=?, username=?, password=?, mail=?, role=?, status=?, otp_token=? WHERE user_id=?";
 	private static final String DELETE="DELETE FROM user WHERE user_id=?";
 	private static final String UPDATE_PASSWORD="UPDATE user SET password=? WHERE user_id=?";
 	
@@ -128,7 +128,7 @@ public class UserDAO {
 		
 		u.setPassword(hashPassword(u.getPassword()));		
 		
-		Object[] values= {u.getFirstname(), u.getLastname(), u.getUsername(), u.getPassword(), u.getMail(), u.getRole().ordinal(), u.getStatus().ordinal(), u.getOtpToken(), u.getIsLoggedIn()};
+		Object[] values= {u.getFirstname(), u.getLastname(), u.getUsername(), u.getPassword(), u.getMail(), u.getRole().ordinal(), u.getStatus().ordinal()};
 		
 		try {
 			conn=pool.checkOut();
@@ -160,7 +160,7 @@ public class UserDAO {
 		if(changePass) {
 			u.setPassword(hashPassword(u.getPassword()));
 		}
-		Object[] values= {u.getFirstname(), u.getLastname(), u.getUsername(), u.getPassword(), u.getMail(), u.getRole().ordinal(), u.getStatus().ordinal(), u.getUserId()};
+		Object[] values= {u.getFirstname(), u.getLastname(), u.getUsername(), u.getPassword(), u.getMail(), u.getRole().ordinal(), u.getStatus().ordinal(),u.getOtpToken(), u.getUserId()};
 		
 		try {
 			conn=pool.checkOut();

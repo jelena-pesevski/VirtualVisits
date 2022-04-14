@@ -29,6 +29,6 @@ public class UserEntity {
     private UserStatus status;
     private String otpToken;
     @Basic
-    @Column(name = "is_logged_in", nullable = false)
+    @Column(name = "is_logged_in")
     private Boolean isLoggedIn;
 }

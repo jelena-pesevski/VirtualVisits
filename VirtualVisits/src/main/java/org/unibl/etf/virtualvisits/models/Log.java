@@ -12,4 +12,5 @@ public class Log {
     private String info;
     private String action;
     private Instant dateTime;
+    private String username;
 }

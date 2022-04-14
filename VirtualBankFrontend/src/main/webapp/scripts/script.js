@@ -30,6 +30,34 @@ function change(){
 	request.send(JSON.stringify(object));
 }
 
+function refreshTransactions(){
+	 var request = new XMLHttpRequest();
+	 request.onreadystatechange = function () {
+	 	if (request.readyState == 4 && request.status == 200) {
+			var transactions=JSON.parse(request.responseText);
+
+			var tBody=document.getElementById("tbody");
+			tBody.innerHTML="";
+			
+			for(let i in transactions){
+				var tr = document.createElement('tr');
+       
+                var td1 = document.createElement('td');
+                td1.innerText = transactions[i].dateTime;
+                
+                var td2 = document.createElement('td');
+                td2.innerText = transactions[i].cashAmount;
+                
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                tBody.appendChild(tr);
+			}		
+	    }     
+	  };
+	  request.open("POST", "?action=transactions", true);
+	  request.send(null);
+}
+
 function init(canPay){
 	var canPaySwitch=document.getElementById("can-pay-switch");
 	

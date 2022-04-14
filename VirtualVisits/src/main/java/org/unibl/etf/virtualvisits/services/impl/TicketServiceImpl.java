@@ -4,9 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.unibl.etf.virtualvisits.exceptions.NotFoundException;
+import org.unibl.etf.virtualvisits.models.JwtUser;
 import org.unibl.etf.virtualvisits.models.User;
 import org.unibl.etf.virtualvisits.models.VirtualVisit;
 import org.unibl.etf.virtualvisits.models.entities.LogEntity;
@@ -56,7 +58,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void buyTicket(BuyTicketRequest request) throws NotFoundException{
-        logService.insert(new LogEntity(0, "Buy ticket try for user id:"+ request.getUserId()+ " and visit "+ request.getVirtualVisitId(), "BUY-TICKET-TRY", Instant.now()));
+        JwtUser jwtUser= (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logService.insert(new LogEntity(0, "Buy ticket try for user id:"+ request.getUserId()+ " and visit "+ request.getVirtualVisitId(), "BUY-TICKET-TRY", Instant.now(), jwtUser.getUsername()));
 
         User user=userService.findById(request.getUserId());
         VirtualVisit virtualVisit=virtualVisitService.findById(request.getVirtualVisitId());
@@ -69,7 +72,7 @@ public class TicketServiceImpl implements TicketService {
         boolean bankResponse=contactBank(transactionRequest);
 
         if(!bankResponse){
-            logService.insert(new LogEntity(0, "Transaction failed for user:"+user.getUsername()+" buying ticket for virtual visit:"+ virtualVisit.getVirtualVisitId() , "TRANSACTION-FAILED", Instant.now()));
+            logService.insert(new LogEntity(0, "Transaction failed for user:"+user.getUsername()+" buying ticket for virtual visit:"+ virtualVisit.getVirtualVisitId() , "TRANSACTION-FAILED", Instant.now(), jwtUser.getUsername()));
             throw new NotFoundException();
         }
 
@@ -83,7 +86,7 @@ public class TicketServiceImpl implements TicketService {
         try{
             mailService.sendTicket(ticketEntity, user);
         }catch (Exception e){
-            logService.insert(new LogEntity(0, "Ticket couldn't be sent to "+ user.getUsername()+ " for visit "+ virtualVisit.getVirtualVisitId(), "SEND-TICKET-FAIL", Instant.now()));
+            logService.insert(new LogEntity(0, "Ticket couldn't be sent to "+ user.getUsername()+ " for visit "+ virtualVisit.getVirtualVisitId(), "SEND-TICKET-FAIL", Instant.now(), jwtUser.getUsername()));
            System.out.println("Ticket is not sent");
         }
 
@@ -93,16 +96,16 @@ public class TicketServiceImpl implements TicketService {
         LocalTime localTime=virtualVisit.getStart().toLocalTime();
         Instant instant= getInstant(localDate, localTime);
 
-        threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getMail(), "Virtual visit at "+ virtualVisit.getMuseumName()+" starts in an hour."), Date.from(instant.minus(1, ChronoUnit.HOURS)));
+        threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getUserId(), "Virtual visit at "+ virtualVisit.getMuseumName()+" starts in an hour."), Date.from(instant.minus(1, ChronoUnit.HOURS)));
 
         //get Instant from date and ending time, and then schedule task
         LocalTime durationTime=virtualVisit.getDuration().toLocalTime();
         localTime=localTime.plus(Duration.ofNanos(durationTime.toNanoOfDay()));
         instant= getInstant(localDate, localTime);
 
-        threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getMail(), "Virtual visit at "+virtualVisit.getMuseumName()+ " ends in 5 minutes."), Date.from(instant.minus(5, ChronoUnit.MINUTES)));
+        threadPoolTaskScheduler.schedule(new MailSenderRunnable(mailService, user.getUserId(), "Virtual visit at "+virtualVisit.getMuseumName()+ " ends in 5 minutes."), Date.from(instant.minus(5, ChronoUnit.MINUTES)));
 
-        logService.insert(new LogEntity(0,  user.getUsername()+" bought ticket for visit "+ virtualVisit.getVirtualVisitId() + " . Ticket number:"+ ticketEntity.getTicketNumber(), "BUY-TICKET", Instant.now()));
+        logService.insert(new LogEntity(0,  user.getUsername()+" bought ticket for visit "+ virtualVisit.getVirtualVisitId() + " . Ticket number:"+ ticketEntity.getTicketNumber(), "BUY-TICKET", Instant.now(), jwtUser.getUsername()));
     }
 
     @Override

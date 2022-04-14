@@ -67,7 +67,7 @@ public class MuseumServiceImpl implements MuseumService {
         museumEntity=museumEntityRepository.save(museumEntity);
 
         JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logService.insert(new LogEntity(0, user.getUsername()+" added new museum with id "+museumEntity.getMuseumId(), "MUSEUM-ADD", Instant.now()));
+        logService.insert(new LogEntity(0, user.getUsername()+" added new museum with id "+museumEntity.getMuseumId(), "MUSEUM-ADD", Instant.now(), user.getUsername()));
 
         return modelMapper.map(museumEntity, MuseumDetails.class);
     }
@@ -81,7 +81,7 @@ public class MuseumServiceImpl implements MuseumService {
         museumEntity=museumEntityRepository.save(museumEntity);
 
         JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logService.insert(new LogEntity(0, user.getUsername()+" updated museum with id "+museumEntity.getMuseumId(), "MUSEUM-UPDATE", Instant.now()));
+        logService.insert(new LogEntity(0, user.getUsername()+" updated museum with id "+museumEntity.getMuseumId(), "MUSEUM-UPDATE", Instant.now(), user.getUsername()));
         return modelMapper.map(museumEntity, MuseumDetails.class);
     }
 
@@ -93,7 +93,7 @@ public class MuseumServiceImpl implements MuseumService {
             museumEntityRepository.deleteById(id);
 
             JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            logService.insert(new LogEntity(0, user.getUsername()+" deleted museum with id "+id ,"MUSEUM-DELETE", Instant.now()));
+            logService.insert(new LogEntity(0, user.getUsername()+" deleted museum with id "+id ,"MUSEUM-DELETE", Instant.now(), user.getUsername()));
         }catch(Exception e){
             throw new IntegrityException();
         }

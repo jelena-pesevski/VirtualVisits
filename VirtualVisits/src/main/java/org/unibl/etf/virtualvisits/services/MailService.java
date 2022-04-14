@@ -8,7 +8,7 @@ import javax.mail.MessagingException;
 
 public interface MailService {
 
-    void sendNotificationMail(String recipient, String content);
+    void sendNotificationMail(Integer recipientId, String content);
 
     void sendTicket(TicketEntity ticketEntity, User user) throws NotFoundException, MessagingException;
 }

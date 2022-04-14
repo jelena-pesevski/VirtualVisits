@@ -43,11 +43,10 @@
 		user.setMail(mail);
 		user.setRole(role);
 		user.setStatus(status);
-		user.setIsLoggedIn(false);
 		boolean result=usersManagerBean.insertUser(user);
 		if(result){
 			response.sendRedirect("users.jsp");
-			logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" added user with username:"+ user.getUsername(), "USER-ADD", Instant.now()));
+			logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" added user with username:"+ user.getUsername(), "USER-ADD", Instant.now(),userBean.getCurrUser().getUsername()));
 		}else{
 			session.setAttribute("addResult", "User can't be added");
 		}

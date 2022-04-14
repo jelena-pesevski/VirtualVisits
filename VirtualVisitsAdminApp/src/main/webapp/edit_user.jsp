@@ -63,7 +63,7 @@
 				if(!result){
 					session.setAttribute("updateResult", "User can't be updated");
 				}else{
-					logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" updated user with username:"+ user.getUsername(), "USER-UPDATE", Instant.now()));
+					logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" updated user with username:"+ user.getUsername(), "USER-UPDATE", Instant.now(),userBean.getCurrUser().getUsername()));
 					response.sendRedirect("users.jsp");
 				}
 			}

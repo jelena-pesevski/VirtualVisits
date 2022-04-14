@@ -15,6 +15,7 @@
 <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script src="scripts/script.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body onload="init(<%=accountBean.getCurrAccount().getCanPay()%>)">
  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -37,6 +38,10 @@
             
             
             <div class="mdl-tabs__panel is-active" id="transactions">
+            	<button type="button" onclick="refreshTransactions()" id="refreshBtn">
+                           <i class="material-icons">refresh</i>
+              	</button>
+              	
              	<table id="tabela">
 			         <thead>
 			          <tr>

@@ -162,7 +162,7 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
             VirtualVisitEntity virtualVisit = repository.findActiveVisitById(request.getVirtualVisitId(), date, time).orElseThrow(InvalidTicketException::new);
 
             //ticket is valid if no exception is thrown
-            logService.insert(new LogEntity(0, "Sending url-s for visit "+ virtualVisit.getVirtualVisitId()+" to user:"+ user.getUsername(), "ATTEND-VISIT", Instant.now()));
+            logService.insert(new LogEntity(0, "Sending url-s for visit "+ virtualVisit.getVirtualVisitId()+" to user:"+ user.getUsername(), "ATTEND-VISIT", Instant.now(), user.getUsername()));
             //list all files from folder
             String folderPath = rootFolder + virtualVisit.getFolder();
             File virtualVisitRoot = new File(folderPath);
@@ -193,7 +193,7 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
             response.setEndingTimeInMillis(getEndingTime(virtualVisit));
             return response;
         }catch(InvalidTicketException e){
-            logService.insert(new LogEntity(0, "Attempt to attend virtual visit failed for user:"+ user.getUsername(), "ATTEND-FAIL", Instant.now()));
+            logService.insert(new LogEntity(0, "Attempt to attend virtual visit failed for user:"+ user.getUsername(), "ATTEND-FAIL", Instant.now(), user.getUsername()));
             throw e;
         }
     }
@@ -222,7 +222,7 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
             folder.delete();
 
             JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            logService.insert(new LogEntity(0, user.getUsername()+" deleted visit with id "+id, "VISIT-DELETE", Instant.now()));
+            logService.insert(new LogEntity(0, user.getUsername()+" deleted visit with id "+id, "VISIT-DELETE", Instant.now(), user.getUsername()));
         }catch(Exception e){
             throw new IntegrityException();
         }
@@ -231,6 +231,11 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
     @Override
     public VirtualVisit insert(String virtualVisit, MultipartFile[] images, MultipartFile video) throws JsonProcessingException {
         VirtualVisit visit=objectMapper.readValue(virtualVisit, VirtualVisit.class);
+
+        if(visit.getYtLink() == null && video==null){
+            return null;
+        }
+
         //map to entity
         VirtualVisitEntity entity=modelMapper.map(visit, VirtualVisitEntity.class);
         entity.setVirtualVisitId(null);
@@ -274,7 +279,7 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
         }
 
         JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logService.insert(new LogEntity(0, user.getUsername()+" added visit with id "+entity.getVirtualVisitId(), "VISIT-ADD", Instant.now()));
+        logService.insert(new LogEntity(0, user.getUsername()+" added visit with id "+entity.getVirtualVisitId(), "VISIT-ADD", Instant.now(), user.getUsername()));
         return modelMapper.map(entity, VirtualVisit.class);
     }
 
@@ -314,7 +319,6 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
                     f.delete();
                 }
             }
-
 
             for(MultipartFile image : images){
                 Path destinationFile = folderForVV.toPath().resolve(
@@ -361,7 +365,7 @@ public class VirtualVisitServiceImpl implements VirtualVisitService {
         }
 
         JwtUser user=(JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logService.insert(new LogEntity(0, user.getUsername()+" updated visit with id "+entity.getVirtualVisitId(), "VISIT-UPDATE", Instant.now()));
+        logService.insert(new LogEntity(0, user.getUsername()+" updated visit with id "+entity.getVirtualVisitId(), "VISIT-UPDATE", Instant.now(),user.getUsername()));
         return modelMapper.map(entity, VirtualVisit.class);
     }
 

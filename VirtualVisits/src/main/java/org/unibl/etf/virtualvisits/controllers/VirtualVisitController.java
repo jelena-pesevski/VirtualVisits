@@ -93,18 +93,24 @@ public class VirtualVisitController {
     public VirtualVisit insert(@RequestParam("virtualVisit") String virtualVisit, @RequestParam("image")MultipartFile[] images, @RequestParam(value = "video", required = false) MultipartFile video) throws BadRequest {
        VirtualVisit visit=null;
 
-       //check if images size is too big
-    /*   if(images.length<5 || images.length>10){
+       //check if images size is ok
+       if(images==null || images.length<5 || images.length>10){
            throw new BadRequest();
-       }*/
+       }
 
        try{
           visit=service.insert(virtualVisit, images, video);
        }catch(Exception e){
            e.printStackTrace();
+           //bad virtual visit string
            throw new BadRequest();
 
        }
+
+       if(visit==null){
+           throw new BadRequest();
+       }
+
        return visit;
     }
 
@@ -112,10 +118,10 @@ public class VirtualVisitController {
     public VirtualVisit update(@PathVariable Integer id, @RequestParam("virtualVisit") String virtualVisit, @RequestParam(value = "image", required = false)MultipartFile[] images, @RequestParam(value = "video", required = false) MultipartFile video) throws BadRequest ,NotFoundException{
         VirtualVisit visit=null;
 
-        //check if images size is too big
-    /*   if(images.length<5 || images.length>10){
+        //check if images size is ok
+       if(images!=null && (images.length<5 || images.length>10)){
            throw new BadRequest();
-       }*/
+       }
 
         visit=service.update(id, virtualVisit, images, video);
         return visit;

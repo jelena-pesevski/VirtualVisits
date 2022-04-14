@@ -22,7 +22,7 @@ public class UserBean {
 			currUser=user;
 			user.setOtpToken(null);
 			UserDAO.update(user, false);
-			LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged into admin JSP app." ,"LOGIN ADMIN APP", Instant.now()));
+			LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged into admin JSP app." ,"LOGIN-ADMIN-APP", Instant.now(), currUser.getUsername()));
 			loggedIn=true;
 			
 			return true;
@@ -40,18 +40,19 @@ public class UserBean {
 		if(user!=null) {
 			currUser=user;
 			UserDAO.update(user, false);
-			LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged into admin JSP app." ,"LOGIN ADMIN APP", Instant.now()));
+			LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged into admin JSP app." ,"LOGIN-ADMIN-APP", Instant.now(), user.getUsername()));
 			loggedIn=true;
 			
 			return true;
 		}else {
+			LogDAO.insert(new Log(null, "Login failed for username:"+username+ " and password:"+password ,"LOGIN-ADMIN-APP-FAIL", Instant.now(), null));
 			return false;
 		}
 		
 	}
 	
 	public void logout() {
-		LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged out from admin JSP app." ,"LOGOUT ADMIN APP", Instant.now()));
+		LogDAO.insert(new Log(null, "Admin "+ currUser.getUsername()+ " logged out from admin JSP app." ,"LOGOUT ADMIN APP", Instant.now(), currUser.getUsername()));
 		//insert log entity
 	}
 	

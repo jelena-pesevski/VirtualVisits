@@ -46,7 +46,7 @@ public class ConnectionPool  {
 	}
 	
 	private void readConfig() {
-		ResourceBundle bundle=PropertyResourceBundle.getBundle("org.unibl.etf.virtual_bank.utils.ConnectionPool");
+		ResourceBundle bundle=PropertyResourceBundle.getBundle("org.unibl.etf.virtualbank.utils.ConnectionPool");
 		jdbcUrl=bundle.getString("jdbcUrl");
 		username=bundle.getString("username");
 		password=bundle.getString("password");

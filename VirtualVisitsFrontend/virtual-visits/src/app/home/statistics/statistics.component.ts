@@ -59,10 +59,6 @@ export class StatisticsComponent implements AfterViewInit {
           }
         });
       }
-    })
-
-
-
-    
+    })    
   }
 }

@@ -68,6 +68,21 @@ export class VisitsEditComponent implements OnInit {
         value.ytLink=null;
       }
 
+      //check whether both yt link and video are choosen
+      if(!this.isEdit){
+        if(value.ytLink==null && this.video==null){
+          this.snackBar.open("Add video or yt link", undefined, { 
+            duration: 2000,
+          });
+          return;
+        }else if(value.ytLink!=null && this.video!=null){
+          this.snackBar.open("Only one of yt link and video can be chosen", undefined, { 
+            duration: 2000,
+          });
+          return;
+        }
+      }
+      
       var formData = new FormData();
 
       formData.append("virtualVisit", JSON.stringify(value));
@@ -128,12 +143,12 @@ export class VisitsEditComponent implements OnInit {
   }
 
   onImagesUpload(event:any){
- /*   if(event.target.files.length<5 || event.target.files.length>10){
+    if(event.target.files.length<5 || event.target.files.length>10){
       this.snackBar.open("You must upload 5-10 images!", undefined, {
         duration: 2000
       });
       return;
-    }*/
+    }
 
     this.images=[];
     for (var i = 0; i < event.target.files.length; i++) { 
@@ -144,6 +159,5 @@ export class VisitsEditComponent implements OnInit {
   onVideoUpload(event:any){
     this.video=event.target.files[0];
   }
-
 
 }

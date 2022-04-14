@@ -59,7 +59,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             Authentication authentication=new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch(Exception ex){
-            logService.insert(new LogEntity(0, "Jwt token validation failed." , "TOKEN-VALIDATION-FAIL", Instant.now()));
+            logService.insert(new LogEntity(0, "Jwt token validation failed." , "TOKEN-VALIDATION-FAIL", Instant.now(), null));
             logger.debug("Token validation failed", ex);
         }
         filterChain.doFilter(request, response);

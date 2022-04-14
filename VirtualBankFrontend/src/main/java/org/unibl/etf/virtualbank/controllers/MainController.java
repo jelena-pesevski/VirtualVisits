@@ -3,6 +3,8 @@ package org.unibl.etf.virtualbank.controllers;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
@@ -16,6 +18,10 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.unibl.etf.virtualbank.models.beans.AccountBean;
 import org.unibl.etf.virtualbank.models.beans.TransactionBean;
+import org.unibl.etf.virtualbank.models.dao.TransactionDAO;
+import org.unibl.etf.virtualbank.models.dto.Transaction;
+
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class MainController
@@ -79,6 +85,23 @@ public class MainController extends HttpServlet {
 				
 			}
 			response.setStatus(404);
+			return;
+		}else if(action.equals("transactions")) {
+			if(currAccount==null || !currAccount.isLoggedIn()) {
+				response.setStatus(404);
+				return;
+			}
+			
+			ArrayList<Transaction> transactions=TransactionDAO.getAllByAccountId(currAccount.getCurrAccount().getAccountId());
+			Gson gson=new Gson();
+			String json=gson.toJson(transactions);
+			
+			response.setContentType("application/json");
+			PrintWriter out=response.getWriter();
+			out.print(json);
+			out.flush();
+			out.close();
+			
 			return;
 		}
 		else {

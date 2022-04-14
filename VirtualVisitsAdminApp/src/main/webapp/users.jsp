@@ -23,7 +23,7 @@
 			if(!result){
 				session.setAttribute("deleteResult", "User can't be deleted");
 			}else{
-				logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" deleted user with id:"+ userId, "USER-DELETE", Instant.now()));
+				logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" deleted user with id:"+ userId, "USER-DELETE", Instant.now(), userBean.getCurrUser().getUsername()));
 				session.setAttribute("deleteResult", "User is deleted");
 			}
 		}else{
@@ -34,7 +34,7 @@
 		if(userId!=null){
 			boolean result=usersManagerBean.resetPassword(userId);
 			if(!result){
-				logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" password reset for user with id:"+ userId, "PASSWORD-RESET", Instant.now()));
+				logBean.insertLog(new Log(0, userBean.getCurrUser().getUsername()+" password reset for user with id:"+ userId, "PASSWORD-RESET", Instant.now(),userBean.getCurrUser().getUsername()));
 				session.setAttribute("resetPasswdResult", "Password couldn't be reset");
 			}else{
 				session.setAttribute("resetPasswdResult", "New password is set");

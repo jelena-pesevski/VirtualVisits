@@ -42,6 +42,7 @@ export class VisitEntryComponent implements OnInit {
           this.router.navigate(['']);
         }else{
           console.log(err);
+          this.dialogRef.close();
           this.snackBar.open("Ticket number is not valid", undefined, {
             duration: 2000
           });

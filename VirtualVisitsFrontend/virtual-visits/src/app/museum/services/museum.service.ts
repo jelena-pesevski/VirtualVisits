@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class MuseumService {
 
-  private battutaKey : string="b2fc4071c4cd80fc33f10ec7f21d13f1";
+  private battutaKey : string="266ffbe11d7d6a29a109445e4fd3fe63";
  
   constructor(private http:HttpClient) { }
 
